@@ -102,7 +102,9 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, .
   names(coefs_se) <- names(coefficients)
 
   coef_table <- data.frame(
-    coefficients, Std.Err = coefs_se
+    coefficient = names(coefficients),
+    Estimate = coefficients,
+    Std.Err = coefs_se
   )
 
   out$records <- y
