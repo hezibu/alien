@@ -161,7 +161,6 @@ plot_snc <- function(object, type = c("yearly","cumulative")){
     ggplot2::geom_line()+
     ggplot2::scale_linetype_manual(values = c("observed" = 2, "predict" = 1),
                                    labels = c("observed" = "First Records", "predict" = expression("\U03bb"[t]))) +
-    ggplot2::theme_classic()+
     ggplot2::ylab(lab) +
     ggplot2::theme(legend.box.just = "left", legend.title = ggplot2::element_blank(), legend.position = "bottom")
 
