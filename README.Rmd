@@ -1,0 +1,152 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# alien: an R package for estimating alien introduction rates
+
+<!-- badges: start -->
+
+<!-- badges: end -->
+
+alien is a package dedicated to easily estimate the introduction rates of alien species given first records data. It specializes in addressing the role of sampling on the pattern of discoveries, thus providing better estimates than using Generalized Linear Models which assume perfect immediate detection of newly introduced species.
+
+## Installation
+
+You can install the development version of alien from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("hezibu/alien")
+```
+
+## Basic Usage
+
+```{r setting theme, echo= FALSE}
+library(ggplot2)
+
+theme_set(theme_classic()+
+            theme(axis.title = element_text(size = 28),
+                  axis.text = element_text(size = 20),
+                  strip.text = element_text(size = 18),
+                  legend.text = element_text(size = 18),
+                  legend.title = element_blank(),
+                  plot.title = element_text(size = 25),
+                  plot.margin = margin(1,0.1,1,0.1, unit = "cm")))
+```
+
+For the most basic demonstration, let's look at the data provided in Solow and Costello (2004) which describes discoveries of introduced species in the San Francisco estuary (California, USA) between the years 1850--1995. We'll plot it in a cumulative form, replicating the plot from Solow and Costello (2004):
+
+```{r plotting data, out.width="80%", out.height="80%", fig.align='center'}
+library(alien)
+library(ggplot2)
+
+data("sfestuary")
+years <- seq_along(sfestuary) + 1850
+
+ggplot()+
+  aes(x = years, y = cumsum(sfestuary))+
+  geom_line() + 
+  coord_cartesian(ylim = c(0,150))+
+  scale_x_continuous(expand = c(0,0), breaks = seq(1860, 1980, 20)) + 
+  scale_y_continuous(expand = c(0,0), breaks = seq(0, 150, 50)) + 
+  ylab("Cumulative discoveries") + theme(axis.title.x = element_blank())
+
+```
+
+### Model Fitting
+
+As described thoroughly, these discoveries also entail trends in the probability of detecting new alien species. To estimate the introduction rate, ${\beta_1}$, from these data, we will fit the Solow and Costello model using the `snc` function. We can use the `control` argument to pass a list of options to `optim` which does the Maximum-Likelihood Estimation[^1]:
+
+[^1]: In this case we increase `maxiter` so the algorithm will converge
+
+```{r fitting model}
+model <- snc(y = sfestuary, control = list(maxit = 1e4))
+```
+
+When only a vector describing discoveries is supplied, `snc` warns users that it uses the time as the independent variable, similar to the original S&C model.
+
+The result is a list containing several objects:
+
+```{r printing model}
+names(model)
+```
+
+We'll go over each.
+
+#### Records
+
+Shows the supplied records data.
+
+```{r}
+model$records
+```
+
+#### Convergence
+
+Did the optimation algorithm converge? This prints out the convergence code from `optim`:
+
+```{r}
+model$convergence
+```
+
+| Code | Meaning/Troubleshooting                                                                                              |
+|-------------------|-----------------------------------------------------|
+| 0    | Successful convergence                                                                                               |
+| 1    | Iteration limit `maxit` had been reached (increase `maxit` using `control = list(maxit = number))`                   |
+| 10   | Degeneracy of the Nelder-Mead simplex                                                                                |
+| 51   | Warning from the `"L-BFGS-B"`method; Use `debug(snc)` and check the `optim` component `message` for further details. |
+| 52   | Error from the `"L-BFGS-B"`method; Use `debug(snc)` and check the `optim` component `message` for further details.   |
+
+#### log-likelihood
+
+The log-likelihood at the end point of the algorithm (preferably at convergence). Can be used for model selection if needed:
+
+```{r}
+model$`log-likelihood`
+```
+
+#### coefficients
+
+The parameter estimates.
+
+- `beta0` signifies ${\beta_0}$ - the intercept for ${\mu}$.
+- `gamma0` signifies ${\gamma_0}$ - the intercept for ${\Pi}$.
+- `gamma2` signifies ${\gamma_2}$ - and will only appear when the `snc` argument `growth` is set to `TRUE` (the default).
+
+```{r}
+model$coefficients
+```
+
+#### predict
+
+The fitted ${\lambda_t}$ values of the model. The mean of the Poisson distribution from which the records are assumed to derive.
+
+```{r}
+model$predict
+```
+
+### Plotting
+
+Once we've fitted the model, we can use its fit to easily plot ${\lambda_t}$ along with the first records using the function `plot_snc`. Users can choose either `annual` or `cumulative` plots. Because the output is a `ggplot` object, it can easily be customized further:
+
+```{r plotting fit, out.width="80%", out.height="80%", fig.align='center'}
+
+plot_snc(model, type = "cumulative") +
+  coord_cartesian(ylim = c(0,150))+
+  scale_x_continuous(expand = c(0,0), breaks = seq(1860, 1980, 20)) + 
+  scale_y_continuous(expand = c(0,0), breaks = seq(0, 150, 50)) + 
+  ylab("Cumulative discoveries") + theme(axis.title.x = element_blank())
+
+```
+
