@@ -28,6 +28,7 @@
 #' \code{log-likelihood} \tab the maximum log-likelihood.\cr
 #' \code{coefficients} \tab a named vector of the ML estimates of the   coefficients.\cr
 #' \code{fitted.values} \tab the fitted mean \eqn{\lambda} values.\cr
+#' \code{predict} \tab a data frame containing the estimated mean +- Standard error \eqn{\mu} values.\cr
 #' }
 #'
 #' @references Solow, A. R., & Costello, C. J. (2004). Estimating the rate of species introductions from the discovery record. Ecology, 85(7), 1822–1825. https://doi.org/10.1890/03-3102
@@ -74,10 +75,10 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, t
 
   names_mu <- colnames(predictors_mu)
   if ("(Intercept)" %in% names_mu) names_mu[[1]] <- "beta0"
-  if ("time" %in% names_mu) names_mu[which(names(names_mu) == "time")] <- "beta1"
+  if ("time" %in% names_mu) names_mu[which(names_mu == "time")] <- "beta1"
   names_pi <- colnames(predictors_pi)
   if ("(Intercept)" %in% names_pi) names_pi[[1]] <- "gamma0"
-  if ("time" %in% names_pi) names_pi[which(names(names_pi) == "time")] <- "gamma1"
+  if ("time" %in% names_pi) names_pi[which(names_pi == "time")] <- "gamma1"
 
   if (is.null(init)){
     n_init <- length(c(names_mu, names_pi)) + growth
@@ -105,7 +106,6 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, t
   names(coefs_se) <- names(coefficients)
 
   coef_table <- data.frame(
-    coefficient = names(coefficients),
     Estimate = coefficients,
     Std.Err = coefs_se
   )
@@ -114,13 +114,19 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, t
   out$convergence <- optim_out$convergence
   out$`log-likelihood` <-  optim_out$value
   out$coefficients <- coef_table
-  out$predict <- calculate_lambda(mu = mu,
+  out$type <- type
+  out$fitted.values <- calculate_lambda(mu = mu,
                                   pi = pi,
                                   data = data,
                                   beta = coefficients[names_mu],
                                   gamma = coefficients[names_pi],
                                   growth_param = ifelse(growth, coefficients["gamma2"], 0),
                                   type = type)
+  out$predict <- predict_mu(formula =  mu,
+                                   data = data,
+                                   beta = coefficients[names_mu],
+                                   error = coefs_se[names_mu],
+                                   type = type)
   class(out) <- "snc"
   return(out)
 }

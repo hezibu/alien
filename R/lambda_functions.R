@@ -113,3 +113,10 @@ snc_ll_function <- function(y, mu_formula, pi_formula, data, growth = T, x, type
   summand <- y*log(lambda) - lambda
   return(-sum(summand))
 }
+
+predict_mu <- function(formula, data, beta, error, type){
+  mean <- build_mu_function(formula, data, beta, type)
+  lower_95 <- build_mu_function(formula, data, beta - error * 1.96, type)
+  higher_95 <- build_mu_function(formula, data, beta + error * 1.96, type)
+  out <- data.frame(mean,lower_95,higher_95)
+}
