@@ -37,7 +37,7 @@
 #' data(sfestuary)
 #' example_model <- snc(sfestuary)
 #' print(example_model)
-snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, ...){
+snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, type = "exponential", ...){
 
   if (missing(data)){
     if(missing(pi)&missing(mu)){
@@ -82,6 +82,7 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, .
   if (is.null(init)){
     n_init <- length(c(names_mu, names_pi)) + growth
     init <-  rep(0, n_init)
+    if (type == "linear") init[1:2] <- c(1,1)
   }
 
   optim_out <-  stats::optim(snc_ll_function,
@@ -91,7 +92,9 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, .
                              pi = pi,
                              data = data,
                              growth = growth,
-                             hessian = T, ...)
+                             hessian = T,
+                             type = type,
+                             ...)
 
   out <- list()
 
@@ -116,7 +119,8 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, .
                                   data = data,
                                   beta = coefficients[names_mu],
                                   gamma = coefficients[names_pi],
-                                  growth_param = ifelse(growth, coefficients["gamma2"], 0))
+                                  growth_param = ifelse(growth, coefficients["gamma2"], 0),
+                                  type = type)
   class(out) <- "snc"
   return(out)
 }

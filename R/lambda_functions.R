@@ -1,7 +1,15 @@
 ### Internal function for getting a matrix of values of
 ### exp(b0 + b1*x1 + b2x2 + ... + bn*xn)
 
-build_mu_function <- function(formula, data, beta){
+
+build_mu_function <- function(formula, data, beta, type) {
+  if (type == "exponential")
+    return(build_mu_function_exp(formula, data, beta))
+  if (type == "linear")
+    return(build_mu_function_linear(formula, data, beta))
+}
+
+build_mu_function_exp <- function(formula, data, beta){
   x <- stats::model.matrix(object = formula, data = data)
 
   if (length(beta) != ncol(x))
@@ -9,6 +17,20 @@ build_mu_function <- function(formula, data, beta){
   N <- nrow(data)
 
   mu_response <- apply(x, MARGIN = 1, function(x_row) exp(sum(x_row * beta))) |>
+    `names<-`(NULL)
+
+  return(mu_response)
+
+}
+
+build_mu_function_linear <- function(formula, data, beta){
+  x <- stats::model.matrix(object = formula, data = data)
+
+  if (length(beta) != ncol(x))
+    cli::cli_abort("Supplied {length(beta)} initial value{?s} to {ncol(x)} predictor{?s}")
+  N <- nrow(data)
+
+  mu_response <- apply(x, MARGIN = 1, function(x_row) sum(x_row * beta)) |>
     `names<-`(NULL)
 
   return(mu_response)
@@ -51,11 +73,12 @@ build_pi_function <- function(formula, data, gamma, growth_param = 0){
 
 }
 
-calculate_lambda <- function(mu, pi, data, beta, gamma, growth_param){
+calculate_lambda <- function(mu, pi, data, beta, gamma, growth_param, type){
 
   mu_vector <- build_mu_function(formula = mu,
                                  data = data,
-                                 beta = beta)
+                                 beta = beta,
+                                 type = type)
   pst_matrix <- build_pi_function(formula = pi,
                                   data = data,
                                   gamma = gamma,
@@ -64,7 +87,7 @@ calculate_lambda <- function(mu, pi, data, beta, gamma, growth_param){
   colSums(mu_vector * pst_matrix, na.rm = T)
 }
 
-snc_ll_function <- function(y, mu_formula, pi_formula, data, growth = T, x) {
+snc_ll_function <- function(y, mu_formula, pi_formula, data, growth = T, x, type) {
 
   n_beta <- length(all.vars(mu_formula)) + 1
   n_gamma <- length(all.vars(pi_formula)) + 1
@@ -84,7 +107,8 @@ snc_ll_function <- function(y, mu_formula, pi_formula, data, growth = T, x) {
                               data = data,
                               beta = beta,
                               gamma = gamma,
-                              growth_param = growth_param)
+                              growth_param = growth_param,
+                              type = type)
 
   summand <- y*log(lambda) - lambda
   return(-sum(summand))
