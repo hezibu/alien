@@ -128,7 +128,7 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, t
 #' Plot an introduction record and the fitted Solow and Costello (2004) values
 #'
 #' @param object an object of class "snc", usually, a result of a call to `snc`
-#' @param type whether to plot an annual or cumulative number of IAS.
+#' @param cumulative logical - should plot be annual or cumulative number of IAS.
 #'
 #' @return
 #' A `ggplot` plot with the corresponding type of plot.
@@ -139,7 +139,7 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, t
 #' data(sfestuary)
 #' example_model <- snc(sfestuary)
 #' plot_snc(example_model, "cumulative")
-plot_snc <- function(object, type = c("yearly","cumulative")){
+plot_snc <- function(object, cumulative = F){
 
   if (!inherits(object, "snc")){
     cli::cli_abort("Attempt to plot a wrong type of object")
@@ -151,7 +151,7 @@ plot_snc <- function(object, type = c("yearly","cumulative")){
 
   lab <- "Number of IAS"
 
-  if (type == "cumulative"){
+  if (cumulative) {
     plot_data <- plot_data |>
       dplyr::mutate(dplyr::across(c("observed","predict"), .fn = cumsum))
     lab <- paste0("Cumulative ", lab)
