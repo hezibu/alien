@@ -153,24 +153,24 @@ plot_snc <- function(object, cumulative = F){
 
   plot_data <- dplyr::tibble(observed = object[["records"]],
                              time = seq_along(object[["records"]]),
-                             predict = object[["predict"]])
+                             fitted = object[["fitted.values"]])
 
   lab <- "Number of IAS"
 
   if (cumulative) {
     plot_data <- plot_data |>
-      dplyr::mutate(dplyr::across(c("observed","predict"), .fn = cumsum))
+      dplyr::mutate(dplyr::across(c("observed","fitted"), .fn = cumsum))
     lab <- paste0("Cumulative ", lab)
   }
 
   plot_data <- plot_data |>
-    tidyr::pivot_longer(cols = c("observed","predict"), names_to = "name", values_to = "y")
+    tidyr::pivot_longer(cols = c("observed","fitted"), names_to = "name", values_to = "y")
 
   p <- ggplot2::ggplot(plot_data)+
     ggplot2::aes_string(x = "time", y = "y", linetype = "name") +
     ggplot2::geom_line()+
-    ggplot2::scale_linetype_manual(values = c("observed" = 2, "predict" = 1),
-                                   labels = c("observed" = "First Records", "predict" = expression("\U03bb"[t]))) +
+    ggplot2::scale_linetype_manual(values = c("observed" = 2, "fitted" = 1),
+                                   labels = c("observed" = "First Records", "fitted" = expression("\U03bb"[t]))) +
     ggplot2::ylab(lab) +
     ggplot2::theme(legend.box.just = "left", legend.title = ggplot2::element_blank(), legend.position = "bottom")
 
