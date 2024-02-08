@@ -10,7 +10,7 @@ snc(
   pi = NULL,
   data = NULL,
   init = NULL,
-  growth = T,
+  growth = TRUE,
   type = "exponential",
   ...
 )

@@ -4,7 +4,7 @@
 \alias{plot_snc}
 \title{Plot an introduction record and the fitted Solow and Costello (2004) values}
 \usage{
-plot_snc(object, cumulative = F)
+plot_snc(object, cumulative = FALSE)
 }
 \arguments{
 \item{object}{an object of class "snc", usually, a result of a call to \code{snc}}
@@ -20,5 +20,5 @@ Plot an introduction record and the fitted Solow and Costello (2004) values
 \examples{
 data(sfestuary)
 example_model <- snc(sfestuary)
-plot_snc(example_model, "cumulative")
+plot_snc(example_model, cumulative = TRUE)
 }
