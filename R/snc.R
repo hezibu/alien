@@ -8,9 +8,10 @@
 #' @param mu a formula defining the predictors for \eqn{\mu_t}, the annual introduction rate. Formulas should be provided in the syntax `~ x1 + x2 + ... + xn`.
 #' @param pi a formula defining the predictors for \eqn{\Pi_{st}}, the annual probability of detection. Formulas should be provided in the syntax `~ x1 + x2 + ... + xn`.
 #' @param data a data frame containing the variables in the model(s).
-#' @param growth logical. Should the population growth parameter \eqn{\gamma_2} be included in the model for \eqn{\Pi_{st}}?. Note that values for `init`, if provided, need to include an initial value for the growth parameter, when `growth = TRUE`.
-#' @param ... Further arguments passed to `optim`.
 #' @param init Optional. Initial values supplied to `optim`. Must be same length as the total number of parameters.
+#' @param growth logical. Should the population growth parameter \eqn{\gamma_2} be included in the model for \eqn{\Pi_{st}}?. Note that values for `init`, if provided, need to include an initial value for the growth parameter, when `growth = TRUE`.
+#' @param type Define whether the mu function should be on "linear" or "exponential" scale. Defaults to "exponential".
+#' @param ... Further arguments passed to `optim`.
 #'
 #' @details
 #' This function expands on the model described in Solow and Costello (2004) by facilitating the
@@ -167,7 +168,7 @@ plot_snc <- function(object, cumulative = F){
     tidyr::pivot_longer(cols = c("observed","fitted"), names_to = "name", values_to = "y")
 
   p <- ggplot2::ggplot(plot_data)+
-    ggplot2::aes_string(x = "time", y = "y", linetype = "name") +
+    ggplot2::aes(x = .data[["time"]], y = .data[["y"]], linetype = .data[["name"]]) +
     ggplot2::geom_line()+
     ggplot2::scale_linetype_manual(values = c("observed" = 2, "fitted" = 1),
                                    labels = c("observed" = "First Records", "fitted" = expression("\U03bb"[t]))) +

@@ -20,13 +20,13 @@ test_that("snc function stops when no data is given", {
 
 
 test_that("plot_snc return a ggplot object", {
-  expect_equal(class(plot_snc(snc(sfestuary), type = "annual")), c("gg","ggplot"))
-  expect_equal(class(plot_snc(snc(sfestuary), type = "cumulative")), c("gg","ggplot"))
+  expect_equal(class(plot_snc(snc(sfestuary), cumulative = F)), c("gg","ggplot"))
+  expect_equal(class(plot_snc(snc(sfestuary), cumulative = T)), c("gg","ggplot"))
 })
 
 test_that("plot_snc does not work for other object", {
-  expect_error(plot_snc(sfestuary, type = "annual"))
-  expect_no_error(plot_snc(snc(sfestuary), type = "annual"))
+  expect_error(plot_snc(sfestuary, cumulative = F))
+  expect_no_error(plot_snc(snc(sfestuary), cumulative = F))
 })
 
 test_that("summary_snc does not work for other object", {

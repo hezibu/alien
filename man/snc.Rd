@@ -4,7 +4,16 @@
 \alias{snc}
 \title{Fit  Solow and Costello (2004) model}
 \usage{
-snc(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, ...)
+snc(
+  y,
+  mu = NULL,
+  pi = NULL,
+  data = NULL,
+  init = NULL,
+  growth = T,
+  type = "exponential",
+  ...
+)
 }
 \arguments{
 \item{y}{a time series of the annual number of discovered alien and invasive species (IAS)}
@@ -19,6 +28,8 @@ snc(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, ...)
 
 \item{growth}{logical. Should the population growth parameter \eqn{\gamma_2} be included in the model for \eqn{\Pi_{st}}?. Note that values for \code{init}, if provided, need to include an initial value for the growth parameter, when \code{growth = TRUE}.}
 
+\item{type}{Define whether the mu function should be on "linear" or "exponential" scale. Defaults to "exponential".}
+
 \item{...}{Further arguments passed to \code{optim}.}
 }
 \value{
@@ -28,6 +39,7 @@ snc(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, ...)
 \code{log-likelihood} \tab the maximum log-likelihood.\cr
 \code{coefficients} \tab a named vector of the ML estimates of the   coefficients.\cr
 \code{fitted.values} \tab the fitted mean \eqn{\lambda} values.\cr
+\code{predict} \tab a data frame containing the estimated mean +- Standard error \eqn{\mu} values.\cr
 }
 }
 \description{

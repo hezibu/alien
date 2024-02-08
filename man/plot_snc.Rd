@@ -4,12 +4,12 @@
 \alias{plot_snc}
 \title{Plot an introduction record and the fitted Solow and Costello (2004) values}
 \usage{
-plot_snc(object, type = c("yearly", "cumulative"))
+plot_snc(object, cumulative = F)
 }
 \arguments{
 \item{object}{an object of class "snc", usually, a result of a call to \code{snc}}
 
-\item{type}{whether to plot an annual or cumulative number of IAS.}
+\item{cumulative}{logical - should plot be annual or cumulative number of IAS.}
 }
 \value{
 A \code{ggplot} plot with the corresponding type of plot.
