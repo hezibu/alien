@@ -14,6 +14,12 @@ perfect immediate detection of newly introduced species.
 
 ## Installation
 
+You can install the CRAN version of the package with:
+
+``` r
+install.packages("alien")
+```
+
 You can install the development version of alien from
 [GitHub](https://github.com/) with:
 

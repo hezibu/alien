@@ -23,6 +23,13 @@ alien is a package dedicated to easily estimate the introduction rates of alien 
 
 ## Installation
 
+You can install the CRAN version of the package with:
+
+``` r 
+install.packages("alien")
+```
+
+
 You can install the development version of alien from [GitHub](https://github.com/) with:
 
 ``` r
