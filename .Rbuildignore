@@ -3,3 +3,4 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 ^inst/modified_belmaker_et_al_2009_model\.exe$
+^cran-comments\.md$
