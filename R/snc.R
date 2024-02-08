@@ -145,7 +145,7 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, t
 #' @examples
 #' data(sfestuary)
 #' example_model <- snc(sfestuary)
-#' plot_snc(example_model, "cumulative")
+#' plot_snc(example_model, cumulative = T)
 plot_snc <- function(object, cumulative = F){
 
   if (!inherits(object, "snc")){

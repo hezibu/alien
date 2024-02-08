@@ -47,7 +47,7 @@ theme_set(theme_classic()+
 
 For the most basic demonstration, let's look at the data provided in Solow and Costello (2004) which describes discoveries of introduced species in the San Francisco estuary (California, USA) between the years 1850--1995. We'll plot it in a cumulative form, replicating the plot from Solow and Costello (2004):
 
-```{r plotting data, out.width="80%", out.height="80%", fig.align='center'}
+```{r plotting_data, out.width="80%", out.height="80%", fig.align='center'}
 library(alien)
 library(ggplot2)
 
@@ -140,9 +140,9 @@ model$predict
 
 Once we've fitted the model, we can use its fit to easily plot ${\lambda_t}$ along with the first records using the function `plot_snc`. Users can choose either `annual` or `cumulative` plots. Because the output is a `ggplot` object, it can easily be customized further:
 
-```{r plotting fit, out.width="80%", out.height="80%", fig.align='center'}
+```{r plotting_fit, out.width="80%", out.height="80%", fig.align='center'}
 
-plot_snc(model, type = "cumulative") +
+plot_snc(model, cumulative = T) +
   coord_cartesian(ylim = c(0,150))+
   scale_x_continuous(expand = c(0,0), breaks = seq(1860, 1980, 20)) + 
   scale_y_continuous(expand = c(0,0), breaks = seq(0, 150, 50)) + 
