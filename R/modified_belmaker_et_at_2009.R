@@ -1,4 +1,4 @@
-#' Fit an example Bayesian model
+#' Fit an example native discovery model
 #'
 #' @description
 #' Fit an example Bayesian heirarchical model to data, using the proportion of
@@ -35,14 +35,14 @@
 #' @examples
 #' data(medfish)
 #' example_priors <- c(b0_mu = 0, b1_mu = 0, b0_sd = 0.01, b1_sd = 0.001)
-#' bayesian_example(data = medfish,
+#' native_discovery(data = medfish,
 #'    time_col = "time",
-#'    aliens_col = "aliens",
+#'    alien_col = "aliens",
 #'    native_col = "natives",
 #'    native_pool_size = 600,
 #'    priors = example_priors,
 #'    chains = 3, parallel_chains = 3)
-bayesian_example <- function(data, time_col, alien_col, native_col, native_pool_size, priors, ...){
+native_discovery <- function(data, time_col, alien_col, native_col, native_pool_size, priors, ...){
 
   stan_file <- system.file("modified_belmaker_et_al_2009_model.stan", package = "alien")
 
