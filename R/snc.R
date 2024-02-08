@@ -39,7 +39,7 @@
 #' data(sfestuary)
 #' example_model <- snc(sfestuary)
 #' print(example_model)
-snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, type = "exponential", ...){
+snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE, type = "exponential", ...){
 
   if (missing(data)){
     if(missing(pi)&missing(mu)){
@@ -94,7 +94,7 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, t
                              pi = pi,
                              data = data,
                              growth = growth,
-                             hessian = T,
+                             hessian = TRUE,
                              type = type,
                              ...)
 
@@ -145,8 +145,8 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = T, t
 #' @examples
 #' data(sfestuary)
 #' example_model <- snc(sfestuary)
-#' plot_snc(example_model, cumulative = T)
-plot_snc <- function(object, cumulative = F){
+#' plot_snc(example_model, cumulative = TRUE)
+plot_snc <- function(object, cumulative = FALSE){
 
   if (!inherits(object, "snc")){
     cli::cli_abort("Attempt to plot a wrong type of object")

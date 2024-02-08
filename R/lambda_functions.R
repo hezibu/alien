@@ -49,14 +49,14 @@ build_pi_function <- function(formula, data, gamma, growth_param = 0){
     `names<-`(NULL) |>
     rep(N)
 
-  pi_response_vectors_m <- matrix(pi_response_vectors, nrow = N, ncol = N, byrow = T)
+  pi_response_vectors_m <- matrix(pi_response_vectors, nrow = N, ncol = N, byrow = TRUE)
 
   dat <- rep(1:N, N)
-  t_mat <- matrix(dat, nrow = N, ncol = N, byrow = T)
+  t_mat <- matrix(dat, nrow = N, ncol = N, byrow = TRUE)
   t_minus_s_mat <- t_mat - t(t_mat)
 
   pi_st_matrix <- stats::plogis(pi_response_vectors_m + growth_param*exp(t_minus_s_mat))
-  pi_st_matrix[lower.tri(pi_st_matrix, diag = F)] <- 0
+  pi_st_matrix[lower.tri(pi_st_matrix, diag = FALSE)] <- 0
   one_minus_pi_st_matrix <- 1 - pi_st_matrix
   products <- t(apply(one_minus_pi_st_matrix, MARGIN = 1, cumprod))
 
@@ -84,10 +84,10 @@ calculate_lambda <- function(mu, pi, data, beta, gamma, growth_param, type){
                                   gamma = gamma,
                                   growth_param = growth_param)
 
-  colSums(mu_vector * pst_matrix, na.rm = T)
+  colSums(mu_vector * pst_matrix, na.rm = TRUE)
 }
 
-snc_ll_function <- function(y, mu_formula, pi_formula, data, growth = T, x, type) {
+snc_ll_function <- function(y, mu_formula, pi_formula, data, growth = TRUE, x, type) {
 
   n_beta <- length(all.vars(mu_formula)) + 1
   n_gamma <- length(all.vars(pi_formula)) + 1
