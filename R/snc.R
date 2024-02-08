@@ -140,6 +140,8 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
 #' @return
 #' A `ggplot` plot with the corresponding type of plot.
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 #'
 #' @examples
@@ -168,7 +170,7 @@ plot_snc <- function(object, cumulative = FALSE){
     tidyr::pivot_longer(cols = c("observed","fitted"), names_to = "name", values_to = "y")
 
   p <- ggplot2::ggplot(plot_data)+
-    ggplot2::aes(x = .data[["time"]], y = .data[["y"]], linetype = .data[["name"]]) +
+    ggplot2::aes(x = .data$time, y = .data$y, linetype = .data$name) +
     ggplot2::geom_line()+
     ggplot2::scale_linetype_manual(values = c("observed" = 2, "fitted" = 1),
                                    labels = c("observed" = "First Records", "fitted" = expression("\U03bb"[t]))) +
@@ -184,6 +186,8 @@ plot_snc <- function(object, cumulative = FALSE){
 #'
 #' @return A data.frame containing the model estimates, standard error, and the probability of the true value being 0
 #' under the given estimates and errors.
+#'
+#'
 #' @export
 #'
 #' @examples
