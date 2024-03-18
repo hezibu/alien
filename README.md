@@ -25,7 +25,7 @@ You can install the development version of alien from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("REDACTED/alien")
+devtools::install_github("hezibu/alien")
 ```
 
 ## Basic Usage

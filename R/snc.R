@@ -16,7 +16,7 @@
 #' @details
 #' This function expands on the model described in Solow and Costello (2004) by facilitating the
 #' inclusion of external data to describe either \eqn{\mu_t} or \eqn{\Pi_{st}}.
-#' The model with external data is described fully in REDACTED ().
+#' The model with external data is described fully in Buba et al (2024).
 #' When no formula is defined for either, the function automatically fits the original Solow and Costello (2004)
 #' model using the length of the vector data as the independent variable \eqn{t}.
 #' The original model uses Rcpp for shorter run time.

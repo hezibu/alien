@@ -4,7 +4,7 @@
 #' Fit an example Bayesian heirarchical model to data, using the proportion of
 #' undiscovered alien species to the total number of undiscovered species (natives and aliens)
 #' as the probability of detecting a new alien species. The model is described in full in Belmaker et al (2009),
-#' with some modifications described in REDACTED ().
+#' with some modifications described in Buba et al (2024).
 #'
 #'
 #' @param data a data.frame containing columns for alien and native discoveries
