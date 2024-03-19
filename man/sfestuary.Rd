@@ -22,10 +22,10 @@ between the years 1850–1995. These data were compiled by Cohen and Carlton (19
 The original data in PDF format is described in full in Cohen and Carlton (1995) and can be viewed here: https://repository.library.noaa.gov/view/noaa/40918
 }
 \references{
-Cohen, A. N., and J. T. Carlton . 1995. Nonindigenous aquatic species in a United States estuary: a case study of the biological invasions of the San Francisco Bay and Delta. U.S. Fish and Wildlife Service, Washington, D.C., USA.
+Cohen, A. N., and J. T. Carlton. 1995. Nonindigenous aquatic species in a United States estuary: a case study of the biological invasions of the San Francisco Bay and Delta. U.S. Fish and Wildlife Service, Washington, D.C., USA. https://repository.library.noaa.gov/view/noaa/40918
 
-Cohen, A. N., and J. T. Carlton . 1998. Accelerating invasion rate in a highly invaded estuary. Science 279: 555– 558.
+Cohen, A. N., and J. T. Carlton. 1998. Accelerating invasion rate in a highly invaded estuary. Science 279: 555– 558. https://doi.org/10.1126/science.279.5350.555
 
-Solow, A. R., & Costello, C. J. (2004). Estimating the rate of species introductions from the discovery record. Ecology, 85(7), 1822–1825. https://doi.org/10.1890/03-3102
+Solow, A. R., and Costello, C. J. 2004. Estimating the rate of species introductions from the discovery record. Ecology, 85(7), 1822–1825. https://doi.org/10.1890/03-3102
 }
 \keyword{datasets}
