@@ -1,3 +1,5 @@
+testthat::skip_if_not_installed("cmdstanr")
+
 test_that("bayesian_example returns appropriate class object", {
   example_priors <- c(b0_mu = 0, b1_mu = 0, b0_sd = 0.01, b1_sd = 0.001)
   invisible(
