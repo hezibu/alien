@@ -33,4 +33,5 @@
 #' @references Golani, D. 2021. An updated Checklist of the Mediterranean fishes of Israel, with illustrations of recently recorded species and delineation of Lessepsian migrants. Zootaxa, 4956, 1-108. https://doi.org/10.11646/zootaxa.4956.1.1
 #'
 #' @source <https://esajournals.onlinelibrary.wiley.com/doi/full/10.1890/07-1904.1>
+#' @source <https://doi.org/10.11646/zootaxa.4956.1.1>
 "medfish"
