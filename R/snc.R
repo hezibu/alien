@@ -36,9 +36,11 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' data(sfestuary)
 #' example_model <- snc(sfestuary)
 #' print(example_model)
+#' }
 snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE, type = "exponential", ...){
 
   if (missing(data)){
@@ -145,9 +147,11 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' data(sfestuary)
 #' example_model <- snc(sfestuary)
 #' plot_snc(example_model, cumulative = TRUE)
+#' }
 plot_snc <- function(object, cumulative = FALSE){
 
   if (!inherits(object, "snc")){
@@ -191,9 +195,11 @@ plot_snc <- function(object, cumulative = FALSE){
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' data(sfestuary)
 #' example_model <- snc(sfestuary)
 #' summary(example_model)
+#' }
 summary_snc <- function(object) {
 
   if (!inherits(object, "snc")){

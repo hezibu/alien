@@ -18,7 +18,9 @@ A \code{ggplot} plot with the corresponding type of plot.
 Plot an introduction record and the fitted Solow and Costello (2004) values
 }
 \examples{
+\donttest{
 data(sfestuary)
 example_model <- snc(sfestuary)
 plot_snc(example_model, cumulative = TRUE)
+}
 }

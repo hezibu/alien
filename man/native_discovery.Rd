@@ -50,6 +50,7 @@ It can be used for user data if data on both alien and native discoveries are pr
 ,model assumptions are met.
 }
 \examples{
+\donttest{
 data(medfish)
 example_priors <- c(b0_mu = 0, b1_mu = 0, b0_sd = 0.01, b1_sd = 0.001)
 native_discovery(data = medfish,
@@ -59,6 +60,7 @@ native_discovery(data = medfish,
    native_pool_size = 600,
    priors = example_priors,
    chains = 3, parallel_chains = 3)
+   }
 }
 \seealso{
 \code{\link[=snc]{snc()}} in which other external data can be used as dependent variables for either \eqn{\mu_t} or \eqn{\Pi_{st}}.

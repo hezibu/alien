@@ -33,6 +33,7 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' data(medfish)
 #' example_priors <- c(b0_mu = 0, b1_mu = 0, b0_sd = 0.01, b1_sd = 0.001)
 #' native_discovery(data = medfish,
@@ -42,6 +43,7 @@
 #'    native_pool_size = 600,
 #'    priors = example_priors,
 #'    chains = 3, parallel_chains = 3)
+#'    }
 native_discovery <- function(data, time_col, alien_col, native_col, native_pool_size, priors, ...){
 
   stan_file <- system.file("modified_belmaker_et_al_2009_model.stan", package = "alien")

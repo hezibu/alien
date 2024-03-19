@@ -57,9 +57,11 @@ When numerous estimations are required for a more elaborate model (i.e, for simu
 users may be benefit from building upon the function described in \code{filename.cpp}
 }
 \examples{
+\donttest{
 data(sfestuary)
 example_model <- snc(sfestuary)
 print(example_model)
+}
 }
 \references{
 Solow, A. R., & Costello, C. J. (2004). Estimating the rate of species introductions from the discovery record. Ecology, 85(7), 1822–1825. https://doi.org/10.1890/03-3102

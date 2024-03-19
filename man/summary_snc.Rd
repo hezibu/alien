@@ -17,7 +17,9 @@ under the given estimates and errors.
 Summarize a Solow and Costello Model Fit
 }
 \examples{
+\donttest{
 data(sfestuary)
 example_model <- snc(sfestuary)
 summary(example_model)
+}
 }
