@@ -1,10 +1,13 @@
 Package: alien
-Title: Estimate invasive and alien species (IAS) introduction rates
+Title: Estimate Invasive and Alien Species (IAS) Introduction Rates
 Version: 0.0.0.9000
 Authors@R: 
     person("Yehezkel", "Buba", , "hezibuba@mail.tau.ac.il", role = c("aut", "cre","cph"),
            comment = c(ORCID = "0000-0002-1003-8809"))
-Description: What the package does (one paragraph).
+Description:  Easily estimate the introduction rates of alien species given first records data.
+    It specializes in addressing the role of sampling on the pattern of discoveries, 
+    thus providing better estimates than using Generalized Linear Models which assume perfect 
+    immediate detection of newly introduced species.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
