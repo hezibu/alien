@@ -44,51 +44,62 @@
 snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE, type = "exponential", ...){
 
   if (missing(data)){
+    # if data is not supplied, meaning only y (first records) is supplied
     if(missing(pi)&missing(mu)){
+      # if no covariates supplied only the length of the first records data is used
       cli::cli_alert_warning("no data supplied, using time as independent variable")
       time <- seq_along(y)
       data <- cbind.data.frame(y, time)
       mu <- stats::formula(~ time)
       pi <- stats::formula(~ time)
     } else {
+      # if no data is supplied but covariates are specified, throw an error
       cli::cli_abort("Please supply a dataframe containing independent variables for mu or pi")
     }
   }
 
   if (missing(mu)){
+    # if no covariates supplied only the length of the first records data is used
     cli::cli_alert_warning("No formula defined for mu, using time as independent variable")
     time <- seq_along(y)
     mu <- stats::formula(~ time)
   }
 
   if (missing(pi)){
+    # if no covariates supplied only the length of the first records data is used
     cli::cli_alert_warning("No formula defined for pi, using time as independent variable")
     time <- seq_along(y)
     pi <- stats::formula(~ time)
   }
 
+  # create a model matrix using the covariates
   predictors_mu <- stats::model.matrix(object = mu, data = data)
   predictors_pi <- stats::model.matrix(object = pi, data = data)
 
+  # count number of predictors
   n_predictors <- ncol(predictors_mu) +  ncol(predictors_pi) + growth
 
+  # check if number of predictors match number of initial values for stats::optim
   if (!is.null(init) & length(init) != (n_predictors)){
     cli::cli_abort("Supplied {length(init)} initial value{?s} to {n_predictors} predictor{?s}")
   }
 
+  # name the covariates parameters
   names_mu <- colnames(predictors_mu)
-  if ("(Intercept)" %in% names_mu) names_mu[[1]] <- "beta0"
-  if ("time" %in% names_mu) names_mu[which(names_mu == "time")] <- "beta1"
+  if ("(Intercept)" %in% names_mu) names_mu[[1]] <- "beta0"                 # rename intercept to beta0
+  if ("time" %in% names_mu) names_mu[which(names_mu == "time")] <- "beta1"  # define beta1 as change with time
   names_pi <- colnames(predictors_pi)
-  if ("(Intercept)" %in% names_pi) names_pi[[1]] <- "gamma0"
-  if ("time" %in% names_pi) names_pi[which(names_pi == "time")] <- "gamma1"
+  if ("(Intercept)" %in% names_pi) names_pi[[1]] <- "gamma0"                # rename intercept to gamme0
+  if ("time" %in% names_pi) names_pi[which(names_pi == "time")] <- "gamma1" # define gamma1 as change with time
 
   if (is.null(init)){
+    # if no initial values supplied, use 0
     n_init <- length(c(names_mu, names_pi)) + growth
     init <-  rep(0, n_init)
-    if (type == "linear") init[1:2] <- c(1,1)
+    if (type == "linear") init[1:2] <- c(1,1) # use as 1 as initial value for linear mu functions (uses 0 for exponential)
   }
 
+  # run the optimization function
   optim_out <-  stats::optim(snc_ll_function,
                              y = y,
                              par = init,
@@ -100,12 +111,13 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
                              type = type,
                              ...)
 
+  # define output
   out <- list()
 
   coefficients <- optim_out[["par"]]
   names(coefficients) <- c(names_mu, names_pi, if (growth) "gamma2")
 
-  coefs_se <- HelpersMG::SEfromHessian(a = optim_out[["hessian"]])
+  coefs_se <- HelpersMG::SEfromHessian(a = optim_out[["hessian"]]) # use hessian to get estimate standard error
   names(coefs_se) <- names(coefficients)
 
   coef_table <- data.frame(

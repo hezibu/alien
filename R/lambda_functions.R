@@ -3,6 +3,7 @@
 
 
 build_mu_function <- function(formula, data, beta, type) {
+  # calls the appropriate function depending on type
   if (type == "exponential")
     return(build_mu_function_exp(formula, data, beta))
   if (type == "linear")
@@ -10,6 +11,7 @@ build_mu_function <- function(formula, data, beta, type) {
 }
 
 build_mu_function_exp <- function(formula, data, beta){
+  # create a matrix based on the supplied covariates - exponential
   x <- stats::model.matrix(object = formula, data = data)
 
   if (length(beta) != ncol(x))
@@ -24,6 +26,7 @@ build_mu_function_exp <- function(formula, data, beta){
 }
 
 build_mu_function_linear <- function(formula, data, beta){
+  # create a matrix based on the supplied covariates - linear
   x <- stats::model.matrix(object = formula, data = data)
 
   if (length(beta) != ncol(x))
@@ -38,6 +41,7 @@ build_mu_function_linear <- function(formula, data, beta){
 }
 
 build_pi_function <- function(formula, data, gamma, growth_param = 0){
+  # create a matrix based on the supplied covariates
   x <- stats::model.matrix(object = formula, data = data)
 
   if (length(gamma) != ncol(x))
@@ -74,7 +78,7 @@ build_pi_function <- function(formula, data, gamma, growth_param = 0){
 }
 
 calculate_lambda <- function(mu, pi, data, beta, gamma, growth_param, type){
-
+  # creates a vector of numbers lambda_t based on mu_t and p_t
   mu_vector <- build_mu_function(formula = mu,
                                  data = data,
                                  beta = beta,
@@ -88,20 +92,21 @@ calculate_lambda <- function(mu, pi, data, beta, gamma, growth_param, type){
 }
 
 snc_ll_function <- function(y, mu_formula, pi_formula, data, growth = TRUE, x, type) {
+  # defines the function to minimize using stats::optim
+  n_beta <- length(all.vars(mu_formula)) + 1  # length of all covariates + intercept
+  n_gamma <- length(all.vars(pi_formula)) + 1 # length of all covariates + intercept
 
-  n_beta <- length(all.vars(mu_formula)) + 1
-  n_gamma <- length(all.vars(pi_formula)) + 1
-
-  beta <- x[1:n_beta]
+  beta <- x[1:n_beta] # these are covariates for the mu_t function
 
   if (growth) {
-    growth_param = x[length(x)]
-    gamma <- x[(n_beta+1):(length(x)-1)]
+    growth_param = x[length(x)]          # if we include gamma_2 name it
+    gamma <- x[(n_beta+1):(length(x)-1)] # name the gamma parameters
   } else {
-    growth_param = 0
-    gamma <- x[(n_beta+1):length(x)]
+    growth_param = 0                     # if we don't include gamma_0 then it equals 0
+    gamma <- x[(n_beta+1):length(x)]     # name the gamma parameters
   }
 
+  # use parameters to calculate lambda
   lambda <-  calculate_lambda(mu = mu_formula,
                               pi = pi_formula,
                               data = data,
@@ -111,12 +116,13 @@ snc_ll_function <- function(y, mu_formula, pi_formula, data, growth = TRUE, x, t
                               type = type)
 
   summand <- y*log(lambda) - lambda
-  return(-sum(summand))
+  return(-sum(summand))  # this is the log-likelihood value to be minimized
 }
 
 predict_mu <- function(formula, data, beta, error, type){
+  # function to predict the mu_t values given a formula - predicted number of alien species (discovered and undiscovered)
   mean <- build_mu_function(formula, data, beta, type)
   lower_95 <- build_mu_function(formula, data, beta - error * 1.96, type)
   higher_95 <- build_mu_function(formula, data, beta + error * 1.96, type)
-  out <- data.frame(mean,lower_95,higher_95)
+  out <- data.frame(mean, lower_95, higher_95)
 }
