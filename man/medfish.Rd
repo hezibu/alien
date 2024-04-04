@@ -14,9 +14,9 @@ A data frame with 60 rows and 4 columns:
 }
 }
 \source{
-\url{https://esajournals.onlinelibrary.wiley.com/doi/full/10.1890/07-1904.1}
+\url{https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/07-1904.1}
 
-\url{https://doi.org/10.11646/zootaxa.4956.1.1}
+\url{https://www.mapress.com/zt/article/view/zootaxa.4956.1.1}
 }
 \usage{
 medfish
@@ -26,10 +26,10 @@ The updated data used in Belmaker et al (2009) describing discoveries of native 
 between the years 1927–2017. The original data is described in full in Golani (2005); see also Golani (2021) for the updated version used here.
 }
 \references{
-Golani, D. 2005. Checklist of the Mediterranean Fishes of Israel. Zootaxa, 947, 1-90. https://doi.org/10.11646/zootaxa.947.1.1
+Golani, D. 2005. Checklist of the Mediterranean Fishes of Israel. Zootaxa, 947, 1-90. https://mapress.com/zt/article/view/zootaxa.947.1.1
 
-Belmaker, J., Brokovich, E., China, V., Golani, D., and Kiflawi, M. 2009. Estimating the rate of biological introductions: Lessepsian fishes in the Mediterranean. Ecology, 90(4), 1134–1141. https://doi.org/10.1890/07-1904.1
+Belmaker, J., Brokovich, E., China, V., Golani, D., and Kiflawi, M. 2009. Estimating the rate of biological introductions: Lessepsian fishes in the Mediterranean. Ecology, 90(4), 1134–1141. https://esajournals.onlinelibrary.wiley.com/doi/10.1890/07-1904.1
 
-Golani, D. 2021. An updated Checklist of the Mediterranean fishes of Israel, with illustrations of recently recorded species and delineation of Lessepsian migrants. Zootaxa, 4956, 1-108. https://doi.org/10.11646/zootaxa.4956.1.1
+Golani, D. 2021. An updated Checklist of the Mediterranean fishes of Israel, with illustrations of recently recorded species and delineation of Lessepsian migrants. Zootaxa, 4956, 1-108. https://www.mapress.com/zt/article/view/zootaxa.4956.1.1
 }
 \keyword{datasets}
