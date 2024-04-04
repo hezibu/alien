@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Yehezkel", "Buba", , "hezibuba@mail.tau.ac.il", role = c("aut", "cre","cph"),
            comment = c(ORCID = "0000-0002-1003-8809"))
-Description:  Easily estimate the introduction rates of alien species given first records data.
+Description: Easily estimate the introduction rates of alien species given first records data.
     It specializes in addressing the role of sampling on the pattern of discoveries, 
     thus providing better estimates than using Generalized Linear Models which assume perfect 
     immediate detection of newly introduced species.
@@ -14,16 +14,29 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
     cli,
-    cmdstanr,
     dplyr,
     ggplot2,
     HelpersMG,
+    methods,
+    Rcpp,
+    RcppParallel (>= 5.0.1),
     rlang,
+    rstan (>= 2.18.1),
+    rstantools (>= 2.4.0),
     stats,
     tidyr
 Depends: 
-    R (>= 2.10)
+    R (>= 3.4.0)
 LazyData: true
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Biarch: true
+LinkingTo: 
+    BH (>= 1.66.0),
+    Rcpp (>= 0.12.0),
+    RcppEigen (>= 0.3.3.3.0),
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    StanHeaders (>= 2.18.0)
+SystemRequirements: GNU make

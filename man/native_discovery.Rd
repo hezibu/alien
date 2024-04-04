@@ -58,8 +58,7 @@ native_discovery(data = medfish,
    alien_col = "aliens",
    native_col = "natives",
    native_pool_size = 600,
-   priors = example_priors,
-   chains = 3, parallel_chains = 3)
+   priors = example_priors)
    }
 }
 \seealso{

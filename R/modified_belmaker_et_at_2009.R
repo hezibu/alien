@@ -41,12 +41,9 @@
 #'    alien_col = "aliens",
 #'    native_col = "natives",
 #'    native_pool_size = 600,
-#'    priors = example_priors,
-#'    chains = 3, parallel_chains = 3)
+#'    priors = example_priors)
 #'    }
 native_discovery <- function(data, time_col, alien_col, native_col, native_pool_size, priors, ...){
-
-  stan_file <- system.file("modified_belmaker_et_al_2009_model.stan", package = "alien")
 
   data_for_stan <- list(
     native_total = native_pool_size,  # Estimated number of native species
@@ -59,9 +56,7 @@ native_discovery <- function(data, time_col, alien_col, native_col, native_pool_
     b1_mu = priors[["b1_mu"]], b1_sd = priors[["b1_sd"]]
   )
 
-  mod <- cmdstanr::cmdstan_model(stan_file)
-
-  fit <- mod$sample(data = data_for_stan, ...)
+  fit <- rstan::sampling(stanmodels$modified_belmaker_et_al_2009_model, data = data_for_stan, ...)
 
   return(fit)
 }
