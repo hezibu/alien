@@ -29,7 +29,11 @@ Depends:
     R (>= 3.4.0)
 LazyData: true
 Suggests: 
-    testthat (>= 3.0.0)
+    knitr,
+    purrr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    tibble
 Config/testthat/edition: 3
 Biarch: true
 LinkingTo: 
@@ -40,3 +44,4 @@ LinkingTo:
     rstan (>= 2.18.1),
     StanHeaders (>= 2.18.0)
 SystemRequirements: GNU make
+VignetteBuilder: knitr
