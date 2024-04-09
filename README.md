@@ -310,8 +310,7 @@ plot_snc(model, cumulative = T) +
   coord_cartesian(ylim = c(0,150))+
   scale_y_continuous(expand = c(0,0), breaks = seq(0, 150, 50)) + 
   ylab("Cumulative discoveries") + 
-  xlab("Years since first record in data") + 
-  theme(axis.title.x = element_blank())
+  xlab("Years since first record in data")
 ```
 
 <img src="man/figures/README-plotting_fit-1.png" width="80%" height="80%" style="display: block; margin: auto;" />
