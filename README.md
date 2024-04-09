@@ -30,8 +30,6 @@ devtools::install_github("hezibu/alien")
 
 ## Basic Usage
 
-    #> Warning: package 'ggplot2' was built under R version 4.3.1
-
 For the most basic demonstration, let’s look at the data provided in
 Solow and Costello (2004) which describes discoveries of introduced
 species in the San Francisco estuary (California, USA) between the years
@@ -310,9 +308,10 @@ further:
 
 plot_snc(model, cumulative = T) +
   coord_cartesian(ylim = c(0,150))+
-  scale_x_continuous(expand = c(0,0), breaks = seq(1860, 1980, 20)) + 
   scale_y_continuous(expand = c(0,0), breaks = seq(0, 150, 50)) + 
-  ylab("Cumulative discoveries") + theme(axis.title.x = element_blank())
+  ylab("Cumulative discoveries") + 
+  xlab("Years since first record in data") + 
+  theme(axis.title.x = element_blank())
 ```
 
 <img src="man/figures/README-plotting_fit-1.png" width="80%" height="80%" style="display: block; margin: auto;" />
