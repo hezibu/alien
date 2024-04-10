@@ -1,15 +1,9 @@
-functions {
-  real antiderivative(real b0, real b1, int time){
-    return exp(b0 + b1 * time)/b1;
-  }
-}
-
 data{
   int <lower = 1> N;  // number of rows in the data
   int <lower = 1> native_total; // assumed size of native pool
   array[N] int <lower = 0> dI; // observed number of yearly records invasive
   array[N] int <lower = 0> dN; // observed number of yearly records native
-  array[N] int t; // time from start
+  vector <lower = 0>[N] t; // time from start
   real b0_mu; // prior for betas
   real b1_mu; // prior for betas
   real b0_sd; // prior for betas
@@ -38,14 +32,13 @@ parameters {
 }
 
 transformed parameters {
+  vector<lower = 0>[N] mu_t;
   vector<lower = 0>[N] unrecorded_I;
 
-  real<lower = 0> first_year = antiderivative(b0, b1, 0);
+  mu_t = exp(b0 + b1 .* t);
 
-  unrecorded_I[1] = first_year - recorded_I[1];
-
-  for (i in 2:N){
-    unrecorded_I[i] = antiderivative(b0, b1, t[i]) - first_year - recorded_I[i];
+  for (i in 1:N){
+    unrecorded_I[i] = cumulative_sum(mu_t)[i] - recorded_I[i];
   }
 
 }
