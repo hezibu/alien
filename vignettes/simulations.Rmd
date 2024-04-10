@@ -2,7 +2,7 @@
 title: "Simulations"
 output: rmarkdown::html_vignette
 vignette: >
- %\VignetteIndexEntry{simulations}
+ %\VignetteIndexEntry{Simulations}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
@@ -75,14 +75,15 @@ df_tsl <- df_tsl |> dplyr::sample_n(1)
 ggplot2::theme_set(
   ggplot2::theme_bw()+
     ggplot2::theme(axis.title = ggplot2::element_text(size = 20),
-                   axis.text = ggplot2::element_text(size = 18))
+                   axis.text = ggplot2::element_text(size = 18),
+                   panel.grid = ggplot2::element_blank())
 )
 ```
 
 
 To demonstrate how $lambda_t$ looks like using these parameter combination, we can use the `calculate_lambda` function of the package which is currently not exported but can be called using `alien:::calculate_lambda`:
 
-```{r show lambda, fig.width = 7}
+```{r show lambda, fig.width = 8, fig.height= 4.5, fig.align='center'}
 params <- as.numeric(df_tsl[1:5]) # parameters
 names(params) <- c("b0","b1","pi0","pi1", "pi2") # set names
 time_span <- as.numeric(df_tsl[6]) # time series length.
@@ -269,7 +270,7 @@ The next step is then to simulate $\lambda_t$ based on this proxy. This can be d
 
 > We set the value of pi1 to be 0.2 since the $\gamma_1$ which we set earlier differs from that of $\zeta_0$
 
-```{r lambda_with_proxy, fig.width = 7}
+```{r lambda_with_proxy, fig.width = 8, fig.height= 4.5, fig.align='center'}
 params["pi1"] <- 0.2
 time_span <- 100
 lambda_with_proxy <- alien:::calculate_lambda(mu = ~ time,
