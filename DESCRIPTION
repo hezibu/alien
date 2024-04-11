@@ -24,6 +24,7 @@ Depends:
     R (>= 3.4.0)
 LazyData: true
 Suggests: 
+    BH,
     knitr,
     purrr,
     rmarkdown,
