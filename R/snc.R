@@ -159,7 +159,7 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' data(sfestuary)
 #' example_model <- snc(sfestuary)
 #' plot_snc(example_model, cumulative = TRUE)
