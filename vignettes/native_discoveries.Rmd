@@ -123,6 +123,11 @@ data_for_stan <- c(data_for_stan, priors)
 
 We can then call the `sampling` function to fit the model:
 
+```{r include=FALSE}
+set.seed(1)
+```
+
+
 ```{r sampling, message=FALSE, warning=FALSE, results='hide'}
 model_output <- rstan::sampling(native_discoveries_model, data_for_stan)
 ```
