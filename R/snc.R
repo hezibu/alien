@@ -159,7 +159,7 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' data(sfestuary)
 #' example_model <- snc(sfestuary)
 #' plot_snc(example_model, cumulative = TRUE)
@@ -189,7 +189,7 @@ plot_snc <- function(object, cumulative = FALSE){
     ggplot2::aes(x = .data$time, y = .data$y, linetype = .data$name) +
     ggplot2::geom_line()+
     ggplot2::scale_linetype_manual(values = c("observed" = 2, "fitted" = 1),
-                                   labels = c("observed" = "First Records", "fitted" = expression("\U03bb"[t]))) +
+                                   labels = c("observed" = "First Records", "fitted" = "Fitted Values")) +
     ggplot2::ylab(lab) +
     ggplot2::theme(legend.box.just = "left", legend.title = ggplot2::element_blank(), legend.position = "bottom")
 
