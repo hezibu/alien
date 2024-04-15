@@ -1,6 +1,6 @@
 Package: alien
 Title: Estimate Invasive and Alien Species (IAS) Introduction Rates
-Version: 1.0.1
+Version: 1.0.1.9000
 Authors@R: 
     person("Yehezkel", "Buba", , "hezibuba@mail.tau.ac.il", role = c("aut", "cre","cph"),
            comment = c(ORCID = "0000-0002-1003-8809"))

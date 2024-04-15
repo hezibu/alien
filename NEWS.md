@@ -1,3 +1,5 @@
+# alien (development version)
+
 # alien 1.0.1
 
 * Added .github directory to .Rbuildignore to fix the note:
