@@ -2,7 +2,7 @@
 
 # alien 1.0.1
 
-* Public release
+* CRAN release
 * Added .github directory to .Rbuildignore to fix the note:
   Found the following hidden files and directories:
    .github
