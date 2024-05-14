@@ -19,14 +19,8 @@ Plot an introduction record and the fitted model values
 }
 \examples{
 \donttest{
-# Fit the Solow and Costello (2004) model:
 data(sfestuary)
-example_snc <- snc(sfestuary)
-plot_snc(example_snc, cumulative = TRUE)
-
-# Fit the sampling proxy model from Buba et al (2004):
-data(medfish)
-example_sampling_proxy <- snc(medfish$aliens, pi = ~ natives, data = medfish)
-plot_snc(example_sampling_proxy, type = 'exponential', cumulative = TRUE)
+example_model <- snc(sfestuary)
+plot_snc(example_model, cumulative = TRUE)
 }
 }

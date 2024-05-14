@@ -16,7 +16,7 @@ snc(
 )
 }
 \arguments{
-\item{y}{a time series of the annual number of discovered alien and invasive species (IAS)}
+\item{y}{either a vector describing the annual number of discovered alien and invasive species (IAS), or the name (quoted or unquoted) of the corresponding column in the provided data.}
 
 \item{mu}{a formula defining the predictors for \eqn{\mu_t}, the annual introduction rate. Formulas should be provided in the syntax \code{~ x1 + x2 + ... + xn}.}
 
@@ -45,7 +45,8 @@ snc(
 \description{
 Fit a model to a time series describing first records of alien species.
 If no external data is provided, the function fits the model described in Solow and Costello (2004),
-after which the function is named. It can use external data on either \eqn{\mu_t} or \eqn{\Pi_{st}}, as described in Buba et al (2024).
+after which the function is named. When external data on either \eqn{\mu_t} or \eqn{\Pi_{st}} is provided, the function fits the
+modified model as described in Buba et al (2024).
 }
 \details{
 This function expands on the model described in Solow and Costello (2004) by facilitating the
@@ -59,9 +60,14 @@ or from building upon those functions as described in the vignette \verb{Modifyi
 }
 \examples{
 \donttest{
+# Solow and Costello (2004) model:
 data(sfestuary)
 example_model <- snc(sfestuary)
 print(example_model)
+
+Buba et al (2024) model:
+data(medfish)
+example_buba <- snc(y = aliens, pi = ~ natives, data = medfish)
 }
 }
 \references{
