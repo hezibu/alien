@@ -65,22 +65,22 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
     }
   } else {
     y_col <- substitute(y)
-    if (!exists(y_col)) {
-      if (inherits(y_col, "call")) {
-        y <- eval(y_col)
-      } else if (inherits(y_col, "name")) {
+    if (inherits(y_col, "call")) {
+      y <- eval(y_col)
+    } else if (inherits(y_col, "name")) {
+      if (!exists(y_col)) {
         y_col <- deparse(y_col)
         if (!y_col %in% colnames(data)) {
           cli::cli_abort("Column {y_col} missing from data!")
         } else {
           y <- get(y_col, data)
         }
-      } else if (inherits(y_col, "character")) {
-        if (!y_col %in% colnames(data)) {
-          cli::cli_abort("Column {y_col} missing from data!")
-        } else {
-          y <- get(y_col, data)
-        }
+      }
+    } else if (inherits(y_col, "character")) {
+      if (!y_col %in% colnames(data)) {
+        cli::cli_abort("Column {y_col} missing from data!")
+      } else {
+        y <- get(y_col, data)
       }
     }
   }
