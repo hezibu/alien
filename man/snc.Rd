@@ -2,7 +2,7 @@
 % Please edit documentation in R/snc.R
 \name{snc}
 \alias{snc}
-\title{Fit  Solow and Costello (2004) model}
+\title{Fit  a model to discovery records}
 \usage{
 snc(
   y,
@@ -43,8 +43,9 @@ snc(
 }
 }
 \description{
-Fit the model described in Solow and Costello (2004) to data.
-It can use external data on either \eqn{\mu_t} or \eqn{\Pi_{st}}.
+Fit a model to a time series describing first records of alien species.
+If no external data is provided, the function fits the model described in Solow and Costello (2004),
+after which the function is named. It can use external data on either \eqn{\mu_t} or \eqn{\Pi_{st}}, as described in Buba et al (2024).
 }
 \details{
 This function expands on the model described in Solow and Costello (2004) by facilitating the
@@ -52,9 +53,9 @@ inclusion of external data to describe either \eqn{\mu_t} or \eqn{\Pi_{st}}.
 The model with external data is described fully in Buba et al (2024).
 When no formula is defined for either, the function automatically fits the original Solow and Costello (2004)
 model using the length of the vector data as the independent variable \eqn{t}.
-The original model uses Rcpp for shorter run time.
-When numerous estimations are required for a more elaborate model (i.e, for simulation studies or bootstrapping),
-users may be benefit from building upon the function described in \code{filename.cpp}
+This function currently prioritizes customability over speed. When numerous estimations are required (e.g., for simulation studies or bootstrapping),
+users may be benefit from either using the functions \code{solow_costello} or \code{sampling_proxy} (which are pre-compiled and are much faster),
+or from building upon those functions as described in the vignette \verb{Modifying Rcpp-built models}.
 }
 \examples{
 \donttest{
@@ -65,4 +66,6 @@ print(example_model)
 }
 \references{
 Solow, A. R., & Costello, C. J. (2004). Estimating the rate of species introductions from the discovery record. Ecology, 85(7), 1822–1825. https://doi.org/10.1890/03-3102
+
+Buba, Y., Kiflwai, M., McGeoch, M. A., Belmaker, J. (2024) Evaluating models for estimating introduction rates of alien species from discovery records.
 }

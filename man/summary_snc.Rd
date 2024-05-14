@@ -7,7 +7,7 @@
 summary_snc(object)
 }
 \arguments{
-\item{object}{an object of class "snc", usually, a result of a call to \code{snc}}
+\item{object}{an object of class "snc", usually a result of a call to \code{snc}}
 }
 \value{
 A data.frame containing the model estimates, standard error, and the probability of the true value being 0

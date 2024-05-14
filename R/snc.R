@@ -1,10 +1,11 @@
-#' Fit  Solow and Costello (2004) model
+#' Fit  a model to discovery records
 #'
 #' @description
-#' Fit the model described in Solow and Costello (2004) to data.
-#' It can use external data on either \eqn{\mu_t} or \eqn{\Pi_{st}}.
+#' Fit a model to a time series describing first records of alien species.
+#' If no external data is provided, the function fits the model described in Solow and Costello (2004),
+#' after which the function is named. It can use external data on either \eqn{\mu_t} or \eqn{\Pi_{st}}, as described in Buba et al (2024).
 #'
-#' @param y a time series of the annual number of discovered alien and invasive species (IAS)
+#' @param y either a vector describing the annual number of discovered alien and invasive species (IAS), or the name (quoted or unquoted) of the corresponding column in the provided data.
 #' @param mu a formula defining the predictors for \eqn{\mu_t}, the annual introduction rate. Formulas should be provided in the syntax `~ x1 + x2 + ... + xn`.
 #' @param pi a formula defining the predictors for \eqn{\Pi_{st}}, the annual probability of detection. Formulas should be provided in the syntax `~ x1 + x2 + ... + xn`.
 #' @param data a data frame containing the variables in the model(s).
@@ -19,9 +20,9 @@
 #' The model with external data is described fully in Buba et al (2024).
 #' When no formula is defined for either, the function automatically fits the original Solow and Costello (2004)
 #' model using the length of the vector data as the independent variable \eqn{t}.
-#' The original model uses Rcpp for shorter run time.
-#' When numerous estimations are required for a more elaborate model (i.e, for simulation studies or bootstrapping),
-#' users may be benefit from building upon the function described in `filename.cpp`
+#' This function currently prioritizes customability over speed. When numerous estimations are required (e.g., for simulation studies or bootstrapping),
+#' users may be benefit from either using the functions `solow_costello` or `sampling_proxy` (which are pre-compiled and are much faster),
+#' or from building upon those functions as described in the vignette `Modifying Rcpp-built models`.
 #'
 #' @return `snc` returns an object of class "snc" containing: \tabular{ll}{
 #' \code{records} \tab the supplied first records data \cr
@@ -33,13 +34,19 @@
 #' }
 #'
 #' @references Solow, A. R., & Costello, C. J. (2004). Estimating the rate of species introductions from the discovery record. Ecology, 85(7), 1822–1825. https://doi.org/10.1890/03-3102
+#' @references Buba, Y., Kiflwai, M., McGeoch, M. A., Belmaker, J. (2024) Evaluating models for estimating introduction rates of alien species from discovery records.
 #' @export
 #'
 #' @examples
 #' \donttest{
+#' # Solow and Costello (2004) model:
 #' data(sfestuary)
 #' example_model <- snc(sfestuary)
 #' print(example_model)
+#'
+#' Buba et al (2024) model:
+#' data(medfish)
+#' example_buba <- snc(y = aliens, pi = ~ natives, data = medfish)
 #' }
 snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE, type = "exponential", ...){
 
@@ -55,6 +62,26 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
     } else {
       # if no data is supplied but covariates are specified, throw an error
       cli::cli_abort("Please supply a dataframe containing independent variables for mu or pi")
+    }
+  } else {
+    y_col <- substitute(y)
+    if (!exists(y_col)) {
+      if (inherits(y_col, "call")) {
+        y <- eval(y_col)
+      } else if (inherits(y_col, "name")) {
+        y_col <- deparse(y_col)
+        if (!y_col %in% colnames(data)) {
+          cli::cli_abort("Column {y_col} missing from data!")
+        } else {
+          y <- get(y_col, data)
+        }
+      } else if (inherits(y_col, "character")) {
+        if (!y_col %in% colnames(data)) {
+          cli::cli_abort("Column {y_col} missing from data!")
+        } else {
+          y <- get(y_col, data)
+        }
+      }
     }
   }
 
@@ -89,7 +116,7 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
   if ("(Intercept)" %in% names_mu) names_mu[[1]] <- "beta0"                 # rename intercept to beta0
   if ("time" %in% names_mu) names_mu[which(names_mu == "time")] <- "beta1"  # define beta1 as change with time
   names_pi <- colnames(predictors_pi)
-  if ("(Intercept)" %in% names_pi) names_pi[[1]] <- "gamma0"                # rename intercept to gamme0
+  if ("(Intercept)" %in% names_pi) names_pi[[1]] <- "gamma0"                # rename intercept to gamma0
   if ("time" %in% names_pi) names_pi[which(names_pi == "time")] <- "gamma1" # define gamma1 as change with time
 
   if (is.null(init)){
@@ -131,24 +158,24 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
   out$coefficients <- coef_table
   out$type <- type
   out$fitted.values <- calculate_lambda(mu = mu,
-                                  pi = pi,
-                                  data = data,
-                                  beta = coefficients[names_mu],
-                                  gamma = coefficients[names_pi],
-                                  growth_param = ifelse(growth, coefficients["gamma2"], 0),
-                                  type = type)
+                                        pi = pi,
+                                        data = data,
+                                        beta = coefficients[names_mu],
+                                        gamma = coefficients[names_pi],
+                                        growth_param = ifelse(growth, coefficients["gamma2"], 0),
+                                        type = type)
   out$predict <- predict_mu(formula =  mu,
-                                   data = data,
-                                   beta = coefficients[names_mu],
-                                   error = coefs_se[names_mu],
-                                   type = type)
+                            data = data,
+                            beta = coefficients[names_mu],
+                            error = coefs_se[names_mu],
+                            type = type)
   class(out) <- "snc"
   return(out)
 }
 
-#' Plot an introduction record and the fitted Solow and Costello (2004) values
+#' Plot an introduction record and the fitted model values
 #'
-#' @param object an object of class "snc", usually, a result of a call to `snc`
+#' @param object an object of class "snc", usually a result of a call to `snc`
 #' @param cumulative logical - should plot be annual or cumulative number of IAS.
 #'
 #' @return
@@ -198,7 +225,7 @@ plot_snc <- function(object, cumulative = FALSE){
 
 #' Summarize a Solow and Costello Model Fit
 #'
-#' @param object an object of class "snc", usually, a result of a call to `snc`
+#' @param object an object of class "snc", usually a result of a call to `snc`
 #'
 #' @return A data.frame containing the model estimates, standard error, and the probability of the true value being 0
 #' under the given estimates and errors.

@@ -2,12 +2,12 @@
 % Please edit documentation in R/snc.R
 \name{plot_snc}
 \alias{plot_snc}
-\title{Plot an introduction record and the fitted Solow and Costello (2004) values}
+\title{Plot an introduction record and the fitted model values}
 \usage{
 plot_snc(object, cumulative = FALSE)
 }
 \arguments{
-\item{object}{an object of class "snc", usually, a result of a call to \code{snc}}
+\item{object}{an object of class "snc", usually a result of a call to \code{snc}}
 
 \item{cumulative}{logical - should plot be annual or cumulative number of IAS.}
 }
@@ -15,12 +15,18 @@ plot_snc(object, cumulative = FALSE)
 A \code{ggplot} plot with the corresponding type of plot.
 }
 \description{
-Plot an introduction record and the fitted Solow and Costello (2004) values
+Plot an introduction record and the fitted model values
 }
 \examples{
 \donttest{
+# Fit the Solow and Costello (2004) model:
 data(sfestuary)
-example_model <- snc(sfestuary)
-plot_snc(example_model, cumulative = TRUE)
+example_snc <- snc(sfestuary)
+plot_snc(example_snc, cumulative = TRUE)
+
+# Fit the sampling proxy model from Buba et al (2004):
+data(medfish)
+example_sampling_proxy <- snc(medfish$aliens, pi = ~ natives, data = medfish)
+plot_snc(example_sampling_proxy, type = 'exponential', cumulative = TRUE)
 }
 }
