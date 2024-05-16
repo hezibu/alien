@@ -56,14 +56,15 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
 
   if (missing(data)){
     # if data is not supplied, meaning only y (first records) is supplied
-    if(missing(pi)&missing(mu)){
+    time <- seq_along(y)
+    data <- cbind.data.frame(y, time)
+    if (missing(pi)&missing(mu)){
       # if no covariates supplied only the length of the first records data is used
       cli::cli_alert_warning("no data supplied, using time as independent variable")
-      time <- seq_along(y)
-      data <- cbind.data.frame(y, time)
       mu <- stats::formula(~ time)
       pi <- stats::formula(~ time)
-    } else {
+    } else
+      if (isTRUE(pi != stats::formula(~1)) | isTRUE(mu != stats::formula(~1))) {
       # if no data is supplied but covariates are specified, throw an error
       cli::cli_abort("Please supply a dataframe containing independent variables for mu or pi")
     }
