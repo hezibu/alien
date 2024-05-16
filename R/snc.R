@@ -1,14 +1,14 @@
-#' Fit  a model to discovery records
+#' Fit a model to discovery records
 #'
 #' @description
 #' Fit a model to a time series describing first records of alien species.
-#' If no external data is provided, the function fits the model described in Solow and Costello (2004),
-#' after which the function is named. When external data on either \eqn{\mu_t} or \eqn{\Pi_{st}} is provided, the function fits the
-#' modified model as described in Buba et al (2024).
+#' If no external data is provided, the function fits the model described in Solow and Costello (2004).
+#' When external data on either \eqn{\mu_t} or \eqn{\Pi_{st}} is provided, the function fits the
+#' modified model (sampling-proxy model in the case of \eqn{\Pi_{st}}) as described in Buba et al (2024).
 #'
 #' @param y either a vector describing the annual number of discovered alien and invasive species (IAS), or the name (quoted or unquoted) of the corresponding column in the provided data.
-#' @param mu a formula defining the predictors for \eqn{\mu_t}, the annual introduction rate. Formulas should be provided in the syntax `~ x1 + x2 + ... + xn`.
-#' @param pi a formula defining the predictors for \eqn{\Pi_{st}}, the annual probability of detection. Formulas should be provided in the syntax `~ x1 + x2 + ... + xn`.
+#' @param mu a formula defining the predictors for \eqn{\mu_t}, the annual introduction rate. Formulas should be provided in the syntax `~ x1 + x2 + ... + xn`. Use `~ 1` for an intercept only model.
+#' @param pi a formula defining the predictors for \eqn{\Pi_{st}}, the annual probability of detection. Formulas should be provided in the syntax `~ x1 + x2 + ... + xn`. Use `~ 1` for an intercept only model.
 #' @param data a data frame containing the variables in the model(s).
 #' @param init Optional. Initial values supplied to `optim`. Must be same length as the total number of parameters.
 #' @param growth logical. Should the population growth parameter \eqn{\gamma_2} be included in the model for \eqn{\Pi_{st}}?. Note that values for `init`, if provided, need to include an initial value for the growth parameter, when `growth = TRUE`.
@@ -17,13 +17,15 @@
 #'
 #' @details
 #' This function expands on the model described in Solow and Costello (2004) by facilitating the
-#' inclusion of external data to describe either \eqn{\mu_t} or \eqn{\Pi_{st}}.
-#' The model with external data is described fully in Buba et al (2024).
+#' inclusion of external data to describe either introduction rate \eqn{\mu_t} or detection probability \eqn{\Pi_{st}}.
+#' The model with external data for detection probability (sampling-proxy model) is described fully in Buba et al (2024).
+#' The use of external data to describe the introduction rate has not been thoroughly evaluated.
 #' When no formula is defined for either, the function automatically fits the original Solow and Costello (2004)
 #' model using the length of the vector data as the independent variable \eqn{t}.
-#' This function currently prioritizes customability over speed. When numerous estimations are required (e.g., for simulation studies or bootstrapping),
-#' users may be benefit from either using the functions `solow_costello` or `sampling_proxy` (which are pre-compiled and are much faster),
-#' or from building upon those functions as described in the vignette `Modifying Rcpp-built models`.
+#' All models return estimated parameters for both the introduction rate and the detection probability,
+#' with the parameter of interest usually being the change of introduction rate - \eqn{\beta_1}.
+#' For more details see the Basic Usage vignette:
+#' \code{vignette("basic_usage", package = "alien")}
 #'
 #' @return `snc` returns an object of class "snc" containing: \tabular{ll}{
 #' \code{records} \tab the supplied first records data \cr
@@ -45,9 +47,10 @@
 #' example_model <- snc(sfestuary)
 #' print(example_model)
 #'
-#' Buba et al (2024) model:
+#' # Buba et al (2024) sampling-proxy model:
 #' data(medfish)
 #' example_buba <- snc(y = aliens, pi = ~ natives, data = medfish)
+#' print(example_buba)
 #' }
 snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE, type = "exponential", ...){
 

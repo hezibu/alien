@@ -2,7 +2,7 @@
 % Please edit documentation in R/snc.R
 \name{snc}
 \alias{snc}
-\title{Fit  a model to discovery records}
+\title{Fit a model to discovery records}
 \usage{
 snc(
   y,
@@ -54,9 +54,8 @@ inclusion of external data to describe either \eqn{\mu_t} or \eqn{\Pi_{st}}.
 The model with external data is described fully in Buba et al (2024).
 When no formula is defined for either, the function automatically fits the original Solow and Costello (2004)
 model using the length of the vector data as the independent variable \eqn{t}.
-This function currently prioritizes customability over speed. When numerous estimations are required (e.g., for simulation studies or bootstrapping),
-users may be benefit from either using the functions \code{solow_costello} or \code{sampling_proxy} (which are pre-compiled and are much faster),
-or from building upon those functions as described in the vignette \verb{Modifying Rcpp-built models}.
+#' For more details see the Basic Usage vignette:
+\code{vignette("basic_usage", package = "alien")}
 }
 \examples{
 \donttest{
@@ -65,9 +64,10 @@ data(sfestuary)
 example_model <- snc(sfestuary)
 print(example_model)
 
-Buba et al (2024) model:
+# Buba et al (2024) model:
 data(medfish)
 example_buba <- snc(y = aliens, pi = ~ natives, data = medfish)
+print(example_buba)
 }
 }
 \references{
