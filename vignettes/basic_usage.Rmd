@@ -1,0 +1,225 @@
+---
+title: "Basic Usage"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Basic Usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(alien)
+```
+
+```{r theme setup, echo = FALSE}
+  ggplot2::theme_set(
+  ggplot2::theme_bw()+
+  ggplot2::theme(axis.title = ggplot2::element_text(size = 20),
+  axis.text = ggplot2::element_text(size = 18),
+  panel.grid = ggplot2::element_blank())
+  )
+```
+
+## Introduction
+
+This vignette describes the simple workflow of fitting model to first records data. We'll go over two examples: fitting the Solow & Costello (2004), and fitting the modified sampling-proxy model.
+
+## Solow and Costello (2004) model:
+
+For the most basic demonstration, let's look at the data provided in Solow and Costello (2004) which describes discoveries of introduced species in the San Francisco estuary (California, USA) between the years 1850--1995 (Cohen, 1995). The data in this case are simply first records of aliens:
+
+```{r}
+data("sfestuary")
+print(sfestuary)
+```
+
+We'll plot it in a cumulative form, replicating the plot from Solow and Costello (2004):
+
+```{r plotting_data, fig.width = 8, fig.height= 4.5, fig.align='center'}
+library(alien)
+library(ggplot2)
+
+years <- seq_along(sfestuary) + 1850 # set starting year for the figure
+
+ggplot()+
+  aes(x = years, y = cumsum(sfestuary))+
+  geom_line() + 
+  coord_cartesian(ylim = c(0,150))+
+  scale_x_continuous(breaks = seq(1860, 1980, 20)) + 
+  scale_y_continuous(breaks = seq(0, 150, 50)) + 
+  ylab("Cumulative discoveries") + theme(axis.title.x = element_blank())
+
+```
+
+### Model Fitting
+
+As described thoroughly, these discoveries also entail trends in the probability of detecting new alien species. To estimate the introduction rate, ${\beta_1}$, from these data, we will fit the Solow and Costello model using the `snc` function. We can use the `control` argument to pass a list of options to `optim` which does the Maximum-Likelihood Estimation[^1]:
+
+[^1]: In this case we increase `maxiter` so the algorithm will converge
+
+```{r fitting model}
+model <- snc(y = sfestuary, control = list(maxit = 1e4))
+```
+
+When only a vector describing discoveries is supplied, `snc` warns users that it uses the time as the independent variable, similar to the original S&C model.
+
+The result is a list containing several objects:
+
+```{r printing model}
+names(model)
+```
+
+We'll go over each.
+
+#### Records
+
+Shows the supplied records data.
+
+```{r}
+model$records
+```
+
+#### Convergence
+
+Did the optimation algorithm converge? This prints out the convergence code from `optim`:
+
+```{r}
+model$convergence
+```
+
+| Code | Meaning/Troubleshooting                                                                                              |
+|-------------------|-----------------------------------------------------|
+| 0    | Successful convergence                                                                                               |
+| 1    | Iteration limit `maxit` had been reached (increase `maxit` using `control = list(maxit = number))`                   |
+| 10   | Degeneracy of the Nelder-Mead simplex                                                                                |
+| 51   | Warning from the `"L-BFGS-B"`method; Use `debug(snc)` and check the `optim` component `message` for further details. |
+| 52   | Error from the `"L-BFGS-B"`method; Use `debug(snc)` and check the `optim` component `message` for further details.   |
+
+#### log-likelihood
+
+The log-likelihood at the end point of the algorithm (preferably at convergence). Can be used for model selection if needed:
+
+```{r}
+model$`log-likelihood`
+```
+
+#### coefficients
+
+The parameter estimates.
+
+- `beta0` signifies ${\beta_0}$ - the intercept for ${\mu}$.
+- `gamma0` signifies ${\gamma_0}$ - the intercept for ${\Pi}$.
+- `gamma2` signifies ${\gamma_2}$ - and will only appear when the `snc` argument `growth` is set to `TRUE` (the default).
+
+```{r}
+model$coefficients
+```
+
+#### predict
+
+The fitted ${\lambda_t}$ values of the model. The mean of the Poisson distribution from which the records are assumed to derive.
+
+```{r}
+head(model$predict, 4) 
+```
+
+### Plotting
+
+Once we've fitted the model, we can use its fit to easily plot ${\lambda_t}$ along with the first records using the function `plot_snc`. Users can choose either `annual` or `cumulative` plots. Because the output is a `ggplot` object, it can easily be customized further:
+
+```{r plotting_fit, fig.width = 8, fig.height= 4.5, fig.align='center'}
+
+plot_snc(model, cumulative = T) +
+  coord_cartesian(ylim = c(0,150))+
+  scale_y_continuous(breaks = seq(0, 150, 50)) + 
+  ylab("Cumulative discoveries") + 
+  xlab("Years since first record in data")
+```
+
+## Constant detection model
+
+We can use the function to specify model parameters for either the introduction or detection. Such changes are also possible without supplementation of external data, by constraining either or both of the introduction and detection processes. Next, we'll set detection to be constant with time:
+
+```{r}
+constant_detection <- snc(sfestuary, pi = ~ 1, growth = FALSE)
+```
+
+Here, the model constrain the ${\gamma_1}$ to 0 by containing pi to an intercept-only model, 
+and constrain ${\gamma_2}$ to 0 by setting `growth` to `FALSE`.
+
+We can examine the likelihoods of the new model:
+
+```{r}
+constant_detection$`log-likelihood`
+```
+## Constant introduction model
+
+We can also constrain the introduction rate, as we did with the detection probability:]
+
+```{r}
+constant_introduction <- snc(sfestuary, mu = ~1)
+```
+
+Checking the likelihood of this model shows that there is weak statistical support for the introduction to be constant in this example:
+
+```{r}
+constant_introduction$`log-likelihood`
+```
+
+## Sampling-Proxy Model
+
+Now we'll look at a more elaborated model, which uses external data to control for changes in sampling intensity (Buba et al, 2004). We'll demonstrate that using data used in Belmaker et al (2009) which describe discoveries of native and alien species in the Mediterranean Sea between the years 1927–2017 (Golani, 2021). We will the `medfish` data included in the alien package:
+
+```{r medfish_data}
+data("medfish")
+head(medfish)
+```
+
+The data has several columns:
+1. `year` - The year of the observations.
+2. `time` - how much time has passed from the first observation in the data until this point.
+3. `natives` - how many natives were newly described in this year.
+4. `alien` - how many aliens were newly described in this year.
+
+```{r medfish_plot, fig.width = 8, fig.height= 4.5, fig.align='center'}
+ggplot2::ggplot(medfish)+
+  ggplot2::aes(x = year) + 
+  ggplot2::geom_point(ggplot2::aes(y = cumsum(natives)), shape = 21, size = 2, fill = "#377EB8") +
+  ggplot2::geom_point(ggplot2::aes(y = cumsum(aliens)), shape = 21,  size = 2, fill = "#E41A1C")
+```
+
+## Model fitting
+
+Here, we will demonstrate how the trend in native species discovery can be used as a proxy for the sampling throughot the time series time span. We will begin by adding a column to the data where we scale the native species discoveries:
+
+```{r}
+medfish_for_model <- dplyr::mutate(medfish, natives_scaled = scale(natives))
+```
+
+Now, we can use these scaled values in our model:
+
+```{r}
+sampling_proxy_model <- snc(aliens, pi = ~ natives_scaled, data = medfish_for_model, control = list(maxit = 1000))
+```
+
+In case we want to supply variables to $\mu$, the introduction rate, this can be done by the argument `mu` of the `snc` function, in the same manner.
+
+
+## References
+
+Belmaker, J., Brokovich, E., China, V., Golani, D., and Kiflawi, M. 2009. Estimating the rate of biological introductions: Lessepsian fishes in the Mediterranean. Ecology, 90(4), 1134–1141. https://esajournals.onlinelibrary.wiley.com/doi/10.1890/07-1904.1
+
+Buba, Y., Kiflwai, M., McGeoch, M. A., Belmaker, J. (2024) Evaluating models for estimating introduction rates of alien species from discovery records. https://doi.org/10.1111/geb.13859
+
+Cohen, A. N., and J. T. Carlton. 1995. Nonindigenous aquatic species in a United States estuary: a case study of the biological invasions of the San Francisco Bay and Delta. U.S. Fish and Wildlife Service, Washington, D.C., USA. https://repository.library.noaa.gov/view/noaa/40918
+
+Golani, D. 2021. An updated Checklist of the Mediterranean fishes of Israel, with illustrations of recently recorded species and delineation of Lessepsian migrants. Zootaxa, 4956, 1-108. https://www.mapress.com/zt/article/view/zootaxa.4956.1.1
+
+Solow, A. R., & Costello, C. J. (2004). Estimating the rate of species introductions from the discovery record. Ecology, 85(7), 1822–1825. https://doi.org/10.1890/03-3102
