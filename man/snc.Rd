@@ -16,7 +16,7 @@ snc(
 )
 }
 \arguments{
-\item{y}{either a vector describing the annual number of discovered alien and invasive species (IAS), or the name (quoted or unquoted) of the corresponding column in the provided data.}
+\item{y}{either a vector describing the number of discovered alien and invasive species (IAS) over a given time period, or the name (quoted or unquoted) of the corresponding column in the provided data.}
 
 \item{mu}{a formula defining the predictors for \eqn{\mu_t}, the annual introduction rate. Formulas should be provided in the syntax \code{~ x1 + x2 + ... + xn}. Use \code{~ 1} for an intercept only model.}
 
@@ -76,5 +76,5 @@ print(example_buba)
 \references{
 Solow, A. R., & Costello, C. J. (2004). Estimating the rate of species introductions from the discovery record. Ecology, 85(7), 1822–1825. https://doi.org/10.1890/03-3102
 
-Buba, Y., Kiflwai, M., McGeoch, M. A., Belmaker, J. (2024) Evaluating models for estimating introduction rates of alien species from discovery records.
+Buba, Y., Kiflwai, M., McGeoch, M. A., Belmaker, J. (2024) Evaluating models for estimating introduction rates of alien species from discovery records. https://doi.org/10.1111/geb.13859
 }

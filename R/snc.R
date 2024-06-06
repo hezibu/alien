@@ -65,9 +65,9 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
       pi <- stats::formula(~ time)
     } else
       if (isTRUE(pi != stats::formula(~1)) | isTRUE(mu != stats::formula(~1))) {
-      # if no data is supplied but covariates are specified, throw an error
-      cli::cli_abort("Please supply a dataframe containing independent variables for mu or pi")
-    }
+        # if no data is supplied but covariates are specified, throw an error
+        cli::cli_abort("Please supply a dataframe containing independent variables for mu or pi")
+      }
   } else {
     y_col <- substitute(y)
     if (inherits(y_col, "call")) {
@@ -78,14 +78,14 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
         if (!y_col %in% colnames(data)) {
           cli::cli_abort("Column {y_col} missing from data!")
         } else {
-          y <- get(y_col, data)
+          y <- data[[y_col]]
         }
       }
     } else if (inherits(y_col, "character")) {
       if (!y_col %in% colnames(data)) {
         cli::cli_abort("Column {y_col} missing from data!")
       } else {
-        y <- get(y_col, data)
+        y <- data[[y_col]]
       }
     }
   }
