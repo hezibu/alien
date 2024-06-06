@@ -6,7 +6,7 @@
 #' When external data on either \eqn{\mu_t} or \eqn{\Pi_{st}} is provided, the function fits the
 #' modified model (sampling-proxy model in the case of \eqn{\Pi_{st}}) as described in Buba et al (2024).
 #'
-#' @param y either a vector describing the annual number of discovered alien and invasive species (IAS), or the name (quoted or unquoted) of the corresponding column in the provided data.
+#' @param y either a vector describing the number of discovered alien and invasive species (IAS) over a given time period, or the name (quoted or unquoted) of the corresponding column in the provided data.
 #' @param mu a formula defining the predictors for \eqn{\mu_t}, the annual introduction rate. Formulas should be provided in the syntax `~ x1 + x2 + ... + xn`. Use `~ 1` for an intercept only model.
 #' @param pi a formula defining the predictors for \eqn{\Pi_{st}}, the annual probability of detection. Formulas should be provided in the syntax `~ x1 + x2 + ... + xn`. Use `~ 1` for an intercept only model.
 #' @param data a data frame containing the variables in the model(s).
@@ -135,8 +135,8 @@ snc <- function(y, mu = NULL, pi = NULL, data = NULL, init = NULL, growth = TRUE
   optim_out <-  stats::optim(snc_ll_function,
                              y = y,
                              par = init,
-                             mu = mu,
-                             pi = pi,
+                             mu_formula = mu,
+                             pi_formula = pi,
                              data = data,
                              growth = growth,
                              hessian = TRUE,
