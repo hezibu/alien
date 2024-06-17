@@ -140,3 +140,36 @@ likelihood_space <- function(y, mu = NULL, pi = NULL, data = NULL, growth = TRUE
 
   return(likelihood_space)
 }
+
+likelihood_map <- function(likelihood_space, x, y, range) {
+
+  min_ll <- likelihood_space |> dplyr::filter(log_likelihoods == min(log_likelihoods))
+
+  colnames <- base::setdiff(colnames(likelihood_space), c(x,y, "log_likelihoods"))
+
+  min_ll_value <- min_ll$log_likelihoods
+
+  breaks <-  c(seq(min_ll_value-1, min_ll_value + range, length.out = range), Inf)
+
+  semi_join(likelihood_space, min_ll, by = colnames) |>
+    ggplot()+
+    aes(x = .data[[x]], y = .data[[y]], z = log_likelihoods)+
+    geom_contour_filled(breaks = breaks) +
+    geom_point(data = min_ll, size = 5, shape = 10, color = "red", show.legend = FALSE)+
+    theme_minimal() +
+    scale_x_discrete(expand = c(0,0))+
+    scale_y_discrete(expand = c(0,0))+
+    scale_fill_viridis_d(direction = -1,
+                         # trans = "log10",
+                         guide = guide_colorsteps(
+                           even.steps = T,
+                           frame.colour = "black",
+                           ticks.colour = NA,
+                           barwidth=0.5,
+                           barheight = 15)) +
+    labs(fill = "Log-Likelihood")+
+    theme(aspect.ratio = 1, legend.position = "left", legend.text = element_text(size = 16))
+
+}
+
+
