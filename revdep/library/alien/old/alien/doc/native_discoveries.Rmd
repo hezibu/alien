@@ -1,0 +1,152 @@
+---
+title: "Bayesian model example - Native discoveries"
+output: rmarkdown::html_vignette
+vignette: >
+ %\VignetteIndexEntry{Bayesian model example - Native discoveries}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
+---
+  
+```{r, include = FALSE}
+  knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+  )
+```
+  
+```{r setup, results='hide'}
+  library(alien)
+  library(rstan)
+```
+  
+```{r theme setup, echo = FALSE}
+  ggplot2::theme_set(
+  ggplot2::theme_bw()+
+  ggplot2::theme(axis.title = ggplot2::element_text(size = 20),
+  axis.text = ggplot2::element_text(size = 18),
+  panel.grid = ggplot2::element_blank())
+  )
+```
+
+## Introduction
+
+Here we show an example fitting of a Bayesian heirarchical model to data, using the proportion of undiscovered alien species to the total number of undiscovered species (natives and aliens) as the probability of detecting a new alien species. The model is described in full in Belmaker et al (2009), with some modifications described in Buba et al (2024).
+
+We will demonstrate that using the code provided in the alien package:
+
+```{r reading_model_file}
+model_file <- system.file("stan/modified_belmaker_et_al_2009_model.stan", package = "alien")
+readLines(model_file)
+```
+
+## Data
+
+We will the `medfish` data included in the alien package:
+
+```{r medfish_data}
+data(medfish)
+
+head(medfish)
+```
+
+The data has several columns:
+1. `year` - The year of the observations.
+2. `time` - how much time has passed from the first observation in the data until this point.
+3. `natives` - how many natives were newly described in this year.
+4. `alien` - how many aliens were newly described in this year.
+
+
+```{r medfish_plot, fig.width = 8, fig.height= 4.5, fig.align='center'}
+ggplot2::ggplot(medfish)+
+  ggplot2::aes(x = year) + 
+  ggplot2::geom_point(ggplot2::aes(y = cumsum(natives)), shape = 21, size = 2, fill = "#377EB8") +
+  ggplot2::geom_point(ggplot2::aes(y = cumsum(aliens)), shape = 21,  size = 2, fill = "#E41A1C")
+```
+
+
+## Model fitting
+
+We will use the [rstan package](https://mc-stan.org/rstan/) to fit the model to our data, first we read the model script to define a stan model:
+
+```{r setting_model}
+native_discoveries_model <- rstan::stan_model(model_file)
+```
+
+The next step is to create a data list to be used by rstan:
+
+```{r show_data_list}
+readLines(model_file)[1:11]
+```
+We can set it up using data from medfish. The only thing we need to assume is the native pool size (See Belmaker et al 2009 for more detail)
+
+```{r set_data_list}
+data_for_stan <- list(
+  N = nrow(medfish),
+  native_total = 600,
+  dI = medfish$aliens,
+  dN = medfish$natives,
+  t = medfish$t
+)
+```
+
+An important aspect of Bayesian modelling is the ability to use prior for the model parameters. The model uses priors for both the mean and standard error of the parameters $\beta_0$ and $\beta_1$:
+
+```{r show_priors}
+readLines(model_file)[7:10]
+```
+
+We can start with a naive model of alien introduction to get an idea of how rapid is the alien introduction rate:
+
+```{r naive_model}
+naive_model <- stats::glm(aliens ~ time, data = medfish, family = "poisson")
+stats::summary.glm(naive_model)
+```
+We will use these estimates as priors for our model. 
+
+
+```{r priors}
+coef_table <- summary(naive_model)$coefficients
+priors <- c(
+  b0_mu = coef_table[1,1],
+  b0_sd = coef_table[1,2],
+  b1_mu = coef_table[2,1],
+  b1_sd = coef_table[2,2]
+)
+priors
+```
+
+We join the priors with the rest of the data:
+
+```{r join_data}
+data_for_stan <- c(data_for_stan, priors)
+```
+
+We can then call the `sampling` function to fit the model:
+
+```{r include=FALSE}
+set.seed(1)
+```
+
+
+```{r sampling, message=FALSE, warning=FALSE, results='hide'}
+model_output <- rstan::sampling(native_discoveries_model, data_for_stan)
+```
+
+After the sampling, we can extract the model prediction for the number of undiscovered alien species in each year - `unrecorded_I`:
+
+```{r plotting_results, fig.width = 8, fig.height= 4.5, fig.align='center'}
+stan_summary <- summary(model_output, pars = "unrecorded_I")$summary |>
+  tibble::as_tibble() |> 
+  tibble::add_column(year = medfish$year)
+
+ggplot2::ggplot(medfish)+
+  ggplot2::aes(x = year) + 
+  ggplot2::geom_point(ggplot2::aes(y = cumsum(natives)), shape = 21, size = 2, fill = "#377EB8") +
+  ggplot2::geom_point(ggplot2::aes(y = cumsum(aliens)), shape = 21,  size = 2, fill = "#E41A1C") +
+  ggplot2::geom_ribbon(data = stan_summary, ggplot2::aes(ymin = `2.5%`, ymax = `97.5%`), alpha = 0.2) +
+  ggplot2::geom_line(data = stan_summary, ggplot2::aes(y = mean)) + 
+  ggplot2::labs(x = "Year", y = "Cumulative number\nof discovered species")
+```
+
+
+>>NOTE: This is just an example of the usage of such a model - additional tests should be performed to examine the validity of the results.

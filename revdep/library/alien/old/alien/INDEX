@@ -1,0 +1,8 @@
+medfish                 Discoveries Of Native And Alien Fish Species In
+                        The Eastern Mediterranean Sea
+plot_snc                Plot an introduction record and the fitted
+                        Solow and Costello (2004) values
+sfestuary               Discoveries Of Introduced Species In The San
+                        Francisco Estuary (California, USA)
+snc                     Fit Solow and Costello (2004) model
+summary_snc             Summarize a Solow and Costello Model Fit

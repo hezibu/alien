@@ -1,0 +1,399 @@
+THIS IS THE CHANGELOG OF THE "HelpersMG" PACKAGE
+
+            CHANGES IN VERSION 6.1 (2024-01-30)
+            
+* New CRAN version - 6.1 (2023-06-30)
+
+            CHANGES IN VERSION 6.0.6 (2024-01-14)
+            
+* New CRAN version - 6.0 (2023-06-14)
+* normalize parameter is used also for pSnbinom() - 6.0.1 (2023-07-31)
+* NA in x ou y are allowed in plot_errbar() - 6.0.2 (2023-08-17)
+* .BinomialConfidence uses Wilson method with continuity correction by default - 6.0.3 (2023-10-02)
+* Can plot a cutter plot with different UDL or LDL - 6.0.4 (2024-01-13)
+* n.adat can be changed in cutter() - 6.0.5 (2024-01-14)
+* Precision in ggamma description - 6.0.6 (2024-01-14)
+* Minor change in cArrows() to be compatible with R 4.4.0- 6.0.7 (2024-01-29)
+
+            CHANGES IN VERSION 5.9.1 (2023-04-17)
+            
+* New CRAN version - 5.9 (2023-03-31)
+* dSnbinom do not use exact method when probs are all the same - 5.9.1 (2023-04-17)
+* Change in description of dSnbinom - 5.9.2 (2023-06-14)
+
+            CHANGES IN VERSION 5.8 (2022-11-09)
+            
+* New CRAN version - 5.8 (2022-11-09)
+* Minor change in dSnbinom to prevent overflow error in rare case - 5.8.1 (2022-12-26)
+* Solve a problem for Moore-Penrose generalized inverse matrix in SEfromHessian - 5.8.2 (2023-01-08)
+* New method saddlepoint approximation in dSnbinom - 5.8.3 & 5.8.4 (2023-03-24)
+* Better algoritm for Vellaisamy and Upadhye (2009) method in dSnbinom - 5.8.5 (2023-03-26)
+* Better tolerance management for Furman method in dSnbinom - 5.8.6 (2023-03-26)
+* Normalization is implemented for saddlepoint approximation - 5.8.7 (2023-03-30)
+
+            CHANGES IN VERSION 5.7 (2022-10-23)
+            
+* New CRAN version - 5.7 (2022-09-06)
+* Parameter infinite is no more necessary in dSnbinom - 5.7.1 (2022-10-21)
+* New parameters and attributes for Furnam methode in dSnbinom - 5.7.2 (2022-10-23)
+* New method approximate.normal in dSnbinom - 5.7.2 (2022-10-30)
+* New method approximate.negativebinomial in dSnbinom - 5.7.3 (2022-11-07)
+
+            CHANGES IN VERSION 5.6 (2022-10-19)
+            
+* New CRAN version - 5.6 (2022-09-06)
+* 100 burn-in iterations are added in cutter() and uniform priors are used rather than normal one for default - 5.6.1 (2022-10-10)
+* dSnbinom can use an approximate method by default - 5.6.2 (2022-10-10)
+* Make dSnbinom more rapid using the approximate method - 5.6.3 (2022-10-17)
+* Solve a problem when dSnbinom return an error - 5.6.3 (2022-10-17)
+* New exact method for dSnbinom based on Vellaisamy and Upadhye (2009) - 5.6.4 (2022-10-18)
+* New parametrization for Furnam method in dSnbinom (thanks to Jon Barry) - 5.7 (2022-10-18)
+
+            CHANGES IN VERSION 5.5-4 (2022-08-22)
+            
+* d() returns an invisible output - 5.5-1 (2022-08-22)
+* align parameter for html5 is removed - 5.5-1 (2022-08-22)
+
+            CHANGES IN VERSION 5.5 (2022-07-14)
+            
+* New CRAN version - 5.5 (2022-07-14)
+
+            CHANGES IN VERSION 5.4-17 (2022-06-16)
+            
+* New CRAN version - 5.4 (2022-05-27)
+* New function rmnorm() - 5.4-1 (2022-06-12)
+* lme4 package is shifted in suggested packages - 5.4-17 (2022-07-14)
+
+            CHANGES IN VERSION 5.3-17 (2022-05-27)
+            
+* New CRAN version - 5.3 (2022-04-20)
+* Change in addClassS3() to prevent apparition of NA - 5.3-1 (2022-05-02)
+* addClassS3() is renamed addS3Class() - 5.3-1 (2022-05-02)
+* New function dnbinom_new() with mu, sd, and var parameters - 5.3-5 (2022-05-04)
+* Correct a warning in shiny splitLayout() function - 5.3-10 (2022-05-04)
+* Slight change in  NagelkerkeScaledR2() - 5.3-11 (2022-05-04)
+* Change in examples of universalmclapply() - 5.3-19 (2022-05-27)
+
+            CHANGES IN VERSION 5.2-21 (2022-04-15)
+            
+* New CRAN version - 5.2 (2022-04-04)
+* inside.search() is renamed inside() - 5.2-1 (2022-04-10)
+* text parameter is the first one in inside() - 5.2-1 (2022-04-10)
+* First version of setPriors() - 5.2-1 (2022-04-10)
+* New function plot.PriorsmcmcComposite() - 5.2-10 (2022-04-12)
+* New function addClassS3() - 5.2-17 (2022-04-15)
+
+            CHANGES IN VERSION 5.1-11 (2022-04-02)
+            
+* New CRAN version - 5.1 (2021-01-21)
+* New url to update the package before to be uploaded to CRAN - 5.1-1 (2022-02-24)
+* New parameter to force tide.info() to return tide height and not current speed - 5.1-4 (2022-03-01)
+* Check for update at startup - 5.1-11 (2022-04-02)
+
+            CHANGES IN VERSION 5.0-5 (2022-02-10)
+            
+* New CRAN version - 5.0 (2021-01-21)
+* Minor change in universalmclapply() to use by default getOption("mc.cores") if it is defined - 5.0-1 (2022-02-01)
+* New option quantile for as.parameters - 5.0-2 (2022-02-10)
+* specify_decimal() keeps the attributes of x - 5.1 (2022-02-17)
+* Minot change for figure in documentation - 5.1 (2022-02-17)
+
+            CHANGES IN VERSION 4.9 (2021-11-29)
+            
+* New CRAN version - 4.9 (2021-11-29)
+* More efficient algorithm for Iconography of correlation - 4.9-1 (2022-01-15)
+* Miscellaneous changes for Iconography of correlation - 4.9-4 (2022-01-16)
+
+            CHANGES IN VERSION 4.8-5 (2021-11-29)
+            
+* dbeta_new return values with shape1, shape2, and ncp attributes - 4.8-1 (2021-10-19)
+* New function fitdistrquantiles() to fit beta, normal or gamma distribution based on quantiles - 4.8-2 (2021-10-20)
+* New median and mode options to return parameters of mcmcComposite object - 4.8-3 (2021-11-18)
+* New functions for cutter - 4.8-4 & 4.8-5 (2021-11-29)
+
+            CHANGES IN VERSION 4.7-x (2021-10-18)
+            
+* New CRAN version - 4.7 (2021-09-01)
+* If K1 or K2 is NULL in flexit(), it is replaced to 1 to generate logistic function - 4.7-1 (2021-09-17)
+* format_ncdf() can use object with extra-dimensions - 4.7-2 (2021-10-08)
+* Solve a problem when K1 or K2 are very large in flexit() - 4.7-3 (2021-10-12)
+
+            CHANGES IN VERSION 4.6-5 (2021-09-02)
+            
+* New CRAN version - 4.6 (2021-06-03)
+* MinMax in RandomFromHessianOrMCMC can have only some parameters - 4.6-1 (2021-06-09)
+* Minor change in tide.info() - 4.6-1 (2021-06-09)
+* New function, NagelkerkeScaledR2() - 4.6-2 (2021-06-21)
+* New option in ScalePreviousPlot() to plot the legend at the same place - 4.6-3 (2021-06-23)
+* Workaround for tide.info() problem in windows - 4.6-4 (2021-07-08)
+* plot.IconoCorel() can plot object with method OAT - 4.6-5 (2021-08-20)
+* New parameter tz for tide.info() - 4.6-5 (2021-09-01)
+
+            CHANGES IN VERSION 4.6 (2021-06-03)
+            
+* New CRAN version - 4.5 (2021-03-15)
+* Remove growlnotify function and add openwd() - 4.5-1 (2021-03-25)
+* tide.info() is reintroduced - 4.5-2 (2021-03-25)
+* tide.info() is ameliorated - 4.5-3 (2021-03-26)
+* tide.info() returns time in local time and in UTC time - 4.5-4 (2021-03-26)
+* Remove dependency to XML package - 4.5-4 (2021-03-26)
+* New version of specify_decimals() function - 4.5-5 (2021-03-29)
+* Minor change in tide.info() function - 4.5-6 (2021-03-31)
+* newdbeta renammed as dbeta_new - 4.5-7 (2021-04-08)
+* New function rnbinom_new() - 4.5-8 (2021-04-13) 
+* Remove ftp in examples of format_ncdf() and ind_lat_long() - 4.5-9 (2021-04-23)
+* Add HelpersMG logo - 4.5-10 (2021-05-01)
+* Minor correction in RandomFromHessianOrMCMC() documentation - 4.5-11 (2021-05-14)
+* RandomFromHessianOrMCMC() uses NearPDM if Hessian matrix inversion is wrong - 4.5-11 (2021-05-14)
+* New function show_name() to be used with plot_errbar() - 4.5-12 (2021-06-02)
+* Add message to dbeta_new() to show shape1 and shape2 - 4.6 (2021-06-04)
+* Solve an error when RandomFromHessianOrMCMC used only one variable - 4.6 (2021-06-04)
+
+            CHANGES IN VERSION 4.4-8 (2021-02-26)
+            
+* New CRAN version - 4.3 (2020-08-12)
+* restore par(xpd=FALSE) after barplot_errbar - 4.3-1 (2020-11-08)
+* tide.info() has been removed as the site http://tides.mobilegeographics.com/ does not exist anymore - 4.3-2 (2020-12-18)
+* Better managment of thin parameter in MHalgoGen() - 4.3-2 (2020-12-18)
+* growlnotify() is removed as this software does not exist anymore - 4.3-2 (2020-12-18)
+* as.parameters() is modified to used the new version of mcmcComposite format - 4.3-3 (2020-12-19)
+* New options for RandomFromHessianOrMCMC() - 4.3-4 (2020-12-21)
+* Name of parameter send to fn in RandomFromHessianorMCMC can be changed - 4.4-1 (2021-01-16)
+* If fn used in RandomFromHessianorMCMC returns a list, it is converted in vector - 4.4-2 (2021-01-16)
+* New parameter method in RandomFromHessianorMCMC to simplify its use - 4.4-3 (2021-01-25)
+* Correct a bug in RandomFromHessianorMCMC when replicate = 0 - 4.4-4 (2021-01-27)
+* Minor change in SEfromHessian - 4.4-5 (2021-01-29)
+* New parameters FUN in compare_AIC, AICc, or BIC - 4.4-6 (2021-01-31)
+* format_ncdf() can extract part of file based on longutude and latitude - 4.4-7 (2021-02-16)
+
+            CHANGES IN VERSION 4.2.3 (2020-07-30)
+            
+* New CRAN version - 4.2 (2020-06-15)
+* duplicate.packages() is renamed as duplicated.packages() - 4.2.1 (2020-06-19)
+* duplicated.packages() is renamed as duplicated_packages() - 4.2.2 (2020-07-07)
+* New function specify_decimals() - 4.2.2 (2020-07-07)
+* New function format_ncdf() - 4.2.3 (2020-07-30)
+* Parameters name.lat and name.lon are changed to label.latitude and label.longitude in ind_long_lat() - 4.2.3 (2020-07-30)
+
+            CHANGES IN VERSION 4.1.6 (2020-06-15)
+            
+* plot_errbar: solve a problem when xlim or ylim were not managed consistantly - 4.1 (2020-04-02)
+* New Result Management functions with the RM prefix - 4.1 (2020-04-19)
+* Minor change in SEfromHessian() and RandomFromHessianOrMCMC() to prevent a warning - 4.1.1 (2020-04-22)
+* Minor change in summary.mcmccomposite() to prevent a warning - 4.1.2 (2020-05-09)
+* New silent parameter in RandomFromHessianOrMCMC() - 4.1.3 (2020-05-22)
+* New silent parameter in RM_list() - 4.1.4 (2020-06-07)
+* New max.level parameter in RM_list() - 4.1.5 (2020-06-08)
+* Correct a bug in info.tide() - Thanks to Louise P. McGarry - 4.1.6 (2020-06-15)
+
+            CHANGES IN VERSION 4.0 (2020-02-21)
+            
+* New CRAN version - 4.0 (2020-02-21)
+
+            CHANGES IN VERSION 3.9.4 (2020-02-06)
+            
+* New CRAN version - 3.9 (2019-12-13)
+* Add new function RectangleRegression() - 3.9.1 (2020-01-06)
+* Add new function RandomfromHessian() - 3.9.2 (2020-02-03)
+* Change the function to RandomFromHessianOrMCMC() - 3.9.3 (2020-02-05)
+* New functions FormatCompareAIC() and logLik.compareAIC() - 3.9.4
+* Change to flexit() to ensure that K1 and K2 are not 0 - 4.0
+
+            CHANGES IN VERSION 3.8.6 (2019-12-13)
+
+* Better management of dSnbbinom() with very low probabilities - 3.8.1 (2019-10-13)
+* d() accept names with ' - 3.8.2 (2019-10-14)
+* Solve a problem when dSnbbinom() produced an error - 3.8.3 (2019-10-18)
+* Minor change in dSnbbinom() for very low probability - 3.8.4 (2019-11-06)
+* New function MovingWindow() - 3.8.5 (2019-11-24)
+* Correct a bug for MHalgoGen() when thin is different from 1 and only one variable - 3.8.6 (2019-12-13)
+
+            CHANGES IN VERSION 3.7.1-3.7.3 (2019-10-14)
+
+* New parameter add in modifyVector() - 3.7.1 (2019-09-13)
+* Better x axis managment in plot.mcmcComposite - 3.7.2 (2019-09-16)
+* Solve a problem when only one variable was used in mcmc - 3.7.2 (2019-09-16)
+* as.quantile() renamed is as.quantiles() - 3.7.2 (2019-09-16)
+* Better management of dSnbbinom() using tol - 3.7.3 (2019-10-06)
+
+            CHANGES IN VERSION 3.6-3.7 (2019-08-29)
+
+* Better implementation of flexit model for LD50 - 3.6.1 & 3.6.2 (2019-07-18)
+* Minor change in plot.mcmcComposite when the density in priors is a factor - 3.6.2 (2019-07-18)
+* New function to extract quantiles from mcmcComposite object - 3.6.3 (2019-08-04)
+* Generic flexit model - 3.6.4 (2019-08-04)
+* New parameter traceML to show ML during MCMC - 3.6.5 & 3.6.6 (2019-08-20)
+* Better managment of error for flexit model - 3.6.7 (2019-08-22)
+* New CRAN version - 3.7 (2019-08-29)
+
+            CHANGES IN VERSION 3.5.1-3.6 (2019-07-09)
+
+* Minor changes in MHalgoGen() in the way the priors are read - 3.5.1 (2019-02-19)
+* New function universalmclapply() to create a universal mclapply() function for both windows and unix - 3.5.2 (2019-03-31)
+* Improvment of universalmclapply() - 3.5.3 & 3.5.4 & 3.5.5 (2019-04-23)
+* It is possible to transform the variable used in mcmc before plotting - 3.5.6 (2019-05-29)
+* Name of parameters used in likelihood can be changed in MHalgoGen() - 3.5.7 (2019-05-30)
+* Corret a bug in plot.LD50() (thanks to Philipp Stoddard to point this bug) - 3.5.8 (2019-06-10)
+* Can show the mcmcComposite graph without the prior - 3.5.9 (2019-06-15)
+* Correct a bug for xlim with mcmcComposite graph - 3.5.10 (2019-06-17)
+* New flexit equation in LD50() - 3.5.11 (2019-06-26)
+* Bayesian MCMC in LD50() - 3.5.12 (2019-06-26)
+* Correct a bug for plot mcmcComposite when prior was normal - 3.5.12 (2019-06-26)
+
+            CHANGES IN VERSION 3.5 (2019-01-04)
+
+* New function cArrows() - 3.4 (2018-10-17)
+* New function qvlmer() - 3.4.1 (2018-12-30)
+* solve a problem with tide.info() - 3.5 (2019-01-04)
+* update some internal build for the package - 3.5 (2019-01-04)
+
+            CHANGES IN VERSION 3.3 (2018-09-26)
+
+* Better managment of rda internal file - 3.2.1 (2018-07-30)
+* d() works with names with - characters - 3.2.2 (2018-08-02)
+* list.packages() uses correct names for duplicated packages - 3.2.3 (2018-08-29)
+* CRAN update - 3.3 (2018-09-26)
+
+            CHANGES IN VERSION 3.2 (2018-07-08)
+
+* New function duplicate.packages() - 3.1.1 (2018-04-26)
+* MHalgoGen() store the control parameters in the result - 3.1.2 (2018-04-27)
+* New version of list.packages() and duplicate.packages() - 3.1.3 (2018-04-29)
+
+            CHANGES IN VERSION 3.1 (2018-04-25)
+
+* New functions for Iconography of correlations - 3.0
+* Minor change for plot.mcmccomposite() - 3.0.1
+* New function newdbeta() to parameter beta distribution with mean and variance - 3.0.2
+* New function d() to dput named vector - 3.0.3
+* New function tnirp() to read ASCII representation of vector - 3.0.4
+* New function list.packages() to show the installed packages with their location - 3.0.5
+* Correct a bug for compare_AICc(); the AICc was wrongly calculated - 3.0.6
+* Minor change in IC_threshold_matrix() - 3.0.7
+* Minor change in ind_lat_long() - 3.0.8
+* Minor change in inside.search() - 3.0.9
+
+            CHANGES IN VERSION 2.0 - 2.0.3    (2017-10-19)
+
+* SEfromHessian is more general - 2.0
+* extractAIC.glm() to use AICc with stepAIC() from MASS package - 2.0
+* invlogit() and logit() functions - 2.0
+* read.folder() does not change working directory if error occurs - 2.0
+* new function ellipse() to draw an ellipse - 2.0
+* Minor change for compare_AICc - 2.0
+* Bug correction in ind_long_lat when indices were supplied - 2.0.1
+* ind_long_lat can work with only ncdf4 or RnetCDF package - 2.0.2 and 2.0.3
+
+            CHANGES IN VERSION 1.9.2    (2017-05-14)
+
+* New version for CRAN - 1.9
+* BatchSE is not calculated during merge to prevent an error - 1.9.1
+* SEfromHessian function to estimate SE from Hessian matrix - 1.9.2
+
+            CHANGES IN VERSION 1.8-1.8.10    (2017-02-17)
+
+* New version for CRAN - 1.8
+* New version of the shiny compare - 1.8.1
+* Functions contingencyTable.compare() and series.compare() - 1.8.2
+* Allow NA in data.frame send to series.compare() - 1.8.3
+* Example for dSnbinom() is added - 1.8.4
+* Minor change in compare() and mcmc functions - 1.8.5
+* Cosmetic change in compare() - 1.8.6 
+* New hidden function for non-linear estimation of confidence interval - 1.8.7
+* New hidden functions to estimate random number with vcov matrix - 1.8.8
+* Remove the last change (1.8.8) because package lmf does better job - 1.8.9
+* New function compare_AICc() - 1.8.10
+
+            CHANGES IN VERSION 1.7-1.7.9    (2016-12-25)
+
+* Change in .radioButtons_withHTML() to pass the check for CRAN - 1.7
+* plot.mcmccomposite() accept only one variable - 1.7.1
+* New hidden function .Arrows() - 1.7.2
+* New function r2norm() - 1.7.3
+* Acceleration of MHalgoGen() - 1.7.4
+* adaptive mcmc option for SDProp - 1.7.4
+* SDProp.end element of result list from MHalgoGen() is a named vector - 1.7.5
+* plot.mcmcComposite() shows a second scale if scale.prior is TRUE - 1.7.6
+* New function compare_BIC() - 1.7.7
+* New function table.comparison() and data.comparison() - 1.7.8
+* New shiny function compare() - 1.7.8
+* Minor change for as.parameter() - 1.7.9
+
+            CHANGES IN VERSION 1.6.2    (2016-08-14)
+
+* Minor update in documentation for MHAlgoGen - 1.6.1
+* New hiden function .radioButtons_withHTML() - 1.6.2
+
+            CHANGES IN VERSION 1.6    (2016-07-17)
+
+* Minor update in documentation - 1.5.1
+* New functions symbol.Male() and symbol.Female() - 1.5.2
+* Bug correction for plot.mcmcComposite() - 1.5.2
+* Warning when dSnbinom() return-Inf - 1.5.3
+* New function modeled.hist() - 1.5.4
+* Function dist.entropic() renamed DIx() - 1.5.5
+* Correct a bug in MHAlgoGen() that prevented the use of other parameters - 1.5.6
+* plot_errbar() plots the points afer drawing the error bars - 1.5.7
+* The scale for plot_errbar() takes into account the error bars - 1.5.7
+* Modification of DIx() index to better reflect the expectation for this index - 1.5.8
+* Two versions of the DIx() index based on version parameter - 1.6
+
+            CHANGES IN VERSION 1.4-1.4.10    (2016-03-31)
+
+* Optimization of dmnbinom() for Density of Multiple Negative Binomial distribution - 1.4
+* New function dist.entropic() to quantify complexity of set of objects - 1.4.1
+* Optimization of dmnbinom() for Density of Multiple Negative Binomial distribution when all prob are identical - 1.4.2
+* New functions rmnbinom(), pmnbinom(), qmnbinom() - 1.4.3
+* rmnbinom() works for n=1 - 1.4.4
+* xmnbinom() are renamed as xSnbinom() - 1.4.5
+* which2D() is removed because which() does the same - 1.4.6
+* read_folder() works faster - 1.4.6
+* symmetricize() function from package discontinuited ENA is added - 1.4.7
+* English edition for some vignettes - 1.4.8
+* Better initial tests for parameters of xSnbinom() - 1.4.9
+* New parameter details for dist.entropic() - 1.4.10
+* Correct problem if prob==1 in dSnbinom() - 1.4.10
+
+            CHANGES IN VERSION 1.3-1.3.4    (2016-01-07)
+            
+* Minor change for ... managing in wget() - 1.3
+* Correct a bug for MHalgoGen() when previous parameter is used - 1.3.1
+* compassRose2() and map.scale2() are changed to newcompassRose() and newmap.scale() respectively - 1.3.2
+* new function which2D() to search within the matrix or data.frame objects - 1.3.3
+* new function modifyVector() similar to modifyList() for vectors - 1.3.3
+* new function dmnbinom() for Density of Multiple Negative Binomial distribution - 1.3.4
+
+            CHANGES IN VERSION 1.2.1-1.2.3    (2015-10-08)
+
+* Correct a bug for LD50 fit of initial parameters
+* Correct vignette for sun.info()
+* New function wget to download a file using ftp
+* correct a bug in MHalgoGen() output
+
+            CHANGES IN VERSION 1.2    (2015-06-29)
+
+* New LD50(), predict.LD50(), logLik.LD50() and plot.LD50() functions
+* Better description for Periodic patterns of indices functions
+* plot=TRUE shows the fit using by minmax.periodic()
+* temperature.periodic() renamed index.periodic() because it can be used with tide.info()
+* moon_phase() is renamed moon.info() to be consistent with sun.info()
+* getTide() is renamed tide.info() to be consistent with sun.info()
+
+            CHANGES IN VERSION 1.1    (2015-05-17)
+            
+* barplot_errbar() returns a data.frame with the centers of the bars as barplot does
+* MGalgoGen() better send parameters to likelihood function
+* The lastest version can always been installed using: 
+  install.packages("http://www.ese.u-psud.fr/epc/conservation/CRAN/HelpersMG.tar.gz", 
+  repos=NULL, type="source")
+
+            CHANGES IN VERSION 1.0    (2015-04-07)
+            
+* First version. All the functions were included before in embryogrowth or phenology packages. Changes reported for version 1 are as compared to versions included in previous packages.
+* New examples for mcmcComposite objects
+* Better managment of n.adapt for MHalgoGen() and this function is no more hidden
+* Add a progressbar for functions managing daily patterns of temperatures
+* Add new parameters for insidesearch() to better manage the files filtering
+* New function similar()
+* Add the ... parameter for as.mcmc()
+* Correct a bug for plot.mccmComposite when then parameter value is negative

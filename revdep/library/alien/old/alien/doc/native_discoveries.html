@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Bayesian model example - Native discoveries</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Bayesian model example - Native
+discoveries</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>  <span class="fu">library</span>(alien)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="fu">library</span>(rstan)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&gt; Loading required package: StanHeaders</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; rstan version 2.32.6 (Stan version 2.32.2)</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; For execution on a local, multicore CPU with excess RAM we recommend calling</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt; options(mc.cores = parallel::detectCores()).</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; To avoid recompilation of unchanged Stan programs, we recommend calling</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; rstan_options(auto_write = TRUE)</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt; For within-chain threading using `reduce_sum()` or `map_rect()` Stan functions,</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt; change `threads_per_chain` option:</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt; rstan_options(threads_per_chain = 1)</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt; Do not specify &#39;-march=native&#39; in &#39;LOCAL_CPPFLAGS&#39; or a Makevars file</span></span></code></pre></div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Here we show an example fitting of a Bayesian heirarchical model to
+data, using the proportion of undiscovered alien species to the total
+number of undiscovered species (natives and aliens) as the probability
+of detecting a new alien species. The model is described in full in
+Belmaker et al (2009), with some modifications described in Buba et al
+(2024).</p>
+<p>We will demonstrate that using the code provided in the alien
+package:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>model_file <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;stan/modified_belmaker_et_al_2009_model.stan&quot;</span>, <span class="at">package =</span> <span class="st">&quot;alien&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">readLines</span>(model_file)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;data{&quot;                                                                               </span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;  [2] &quot;  int &lt;lower = 1&gt; N;  // number of rows in the data&quot;                                 </span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;  [3] &quot;  int &lt;lower = 1&gt; native_total; // assumed size of native pool&quot;                      </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;  [4] &quot;  array[N] int &lt;lower = 0&gt; dI; // observed number of yearly records invasive&quot;        </span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;  array[N] int &lt;lower = 0&gt; dN; // observed number of yearly records native&quot;          </span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt;  [6] &quot;  vector &lt;lower = 0&gt;[N] t; // time from start&quot;                                       </span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt;  [7] &quot;  real b0_mu; // prior for betas&quot;                                                    </span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt;  [8] &quot;  real b1_mu; // prior for betas&quot;                                                    </span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;  real b0_sd; // prior for betas&quot;                                                    </span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; [10] &quot;  real b1_sd; // prior for betas&quot;                                                    </span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; [11] &quot;}&quot;                                                                                   </span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; [12] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; [13] &quot;transformed data {&quot;                                                                  </span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; [14] &quot;  array[N] int &lt;lower = 0&gt; unrecorded_N;&quot;                                            </span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; [15] &quot;  array[N] int &lt;lower = 0&gt; yearly_detections;&quot;                                       </span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; [16] &quot;  array[N] int &lt;lower = 0&gt; recorded_I;  // cumulative recorded invasives&quot;            </span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; [17] &quot;  array[N] int &lt;lower = 0&gt; recorded_N; // cumulative recorded natives&quot;               </span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; [18] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; [19] &quot;  recorded_I = cumulative_sum(dI);&quot;                                                  </span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; [20] &quot;  recorded_N = cumulative_sum(dN);&quot;                                                  </span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt; [21] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; [22] &quot;  for (i in 1:N){&quot;                                                                   </span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; [23] &quot;    unrecorded_N[i] = native_total - recorded_N[i];&quot;                                 </span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt; [24] &quot;    yearly_detections[i] = dI[i] + dN[i];&quot;                                           </span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt; [25] &quot;  }&quot;                                                                                 </span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt; [26] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt; [27] &quot;}&quot;                                                                                   </span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co">#&gt; [28] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co">#&gt; [29] &quot;parameters {&quot;                                                                        </span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt; [30] &quot;  real b0;&quot;                                                                          </span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co">#&gt; [31] &quot;  real b1;&quot;                                                                          </span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt; [32] &quot;}&quot;                                                                                   </span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt; [33] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt; [34] &quot;transformed parameters {&quot;                                                            </span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt; [35] &quot;  vector&lt;lower = 0&gt;[N] mu_t;&quot;                                                        </span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#&gt; [36] &quot;  vector&lt;lower = 0&gt;[N] unrecorded_I;&quot;                                                </span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co">#&gt; [37] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co">#&gt; [38] &quot;  mu_t = exp(b0 + b1 .* t);&quot;                                                         </span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co">#&gt; [39] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co">#&gt; [40] &quot;  for (i in 1:N){&quot;                                                                   </span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co">#&gt; [41] &quot;    unrecorded_I[i] = cumulative_sum(mu_t)[i] - recorded_I[i];&quot;                      </span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="co">#&gt; [42] &quot;  }&quot;                                                                                 </span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co">#&gt; [43] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a><span class="co">#&gt; [44] &quot;}&quot;                                                                                   </span></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="co">#&gt; [45] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="co">#&gt; [46] &quot;model{&quot;                                                                              </span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a><span class="co">#&gt; [47] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a><span class="co">#&gt; [48] &quot;  dI ~ beta_binomial(yearly_detections, unrecorded_I, unrecorded_N);&quot;                </span></span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a><span class="co">#&gt; [49] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a><span class="co">#&gt; [50] &quot;  //priors&quot;                                                                          </span></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a><span class="co">#&gt; [51] &quot;  b0  ~ normal(b0_mu, b0_sd);&quot;                                                       </span></span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a><span class="co">#&gt; [52] &quot;  b1  ~ normal(b1_mu , b1_sd);&quot;                                                      </span></span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a><span class="co">#&gt; [53] &quot;}&quot;                                                                                   </span></span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a><span class="co">#&gt; [54] &quot;&quot;                                                                                    </span></span>
+<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a><span class="co">#&gt; [55] &quot;generated quantities {&quot;                                                              </span></span>
+<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a><span class="co">#&gt; [56] &quot;  array[N] int y = beta_binomial_rng(yearly_detections, unrecorded_I, unrecorded_N);&quot;</span></span>
+<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a><span class="co">#&gt; [57] &quot;}&quot;</span></span></code></pre></div>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>We will the <code>medfish</code> data included in the alien
+package:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">data</span>(medfish)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">head</span>(medfish)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;   year time natives aliens</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; 1 1927    0      52      5</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; 2 1930    3       0      1</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; 3 1931    4      12      0</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 4 1934    7      18      0</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 5 1935    8      17      1</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; 6 1937   10       1      1</span></span></code></pre></div>
+<p>The data has several columns: 1. <code>year</code> - The year of the
+observations. 2. <code>time</code> - how much time has passed from the
+first observation in the data until this point. 3. <code>natives</code>
+- how many natives were newly described in this year. 4.
+<code>alien</code> - how many aliens were newly described in this
+year.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(medfish)<span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">x =</span> year) <span class="sc">+</span> </span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_point</span>(ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">cumsum</span>(natives)), <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">fill =</span> <span class="st">&quot;#377EB8&quot;</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_point</span>(ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">cumsum</span>(aliens)), <span class="at">shape =</span> <span class="dv">21</span>,  <span class="at">size =</span> <span class="dv">2</span>, <span class="at">fill =</span> <span class="st">&quot;#E41A1C&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+</div>
+<div id="model-fitting" class="section level2">
+<h2>Model fitting</h2>
+<p>We will use the <a href="https://mc-stan.org/rstan/">rstan
+package</a> to fit the model to our data, first we read the model script
+to define a stan model:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>native_discoveries_model <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">stan_model</span>(model_file)</span></code></pre></div>
+<p>The next step is to create a data list to be used by rstan:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">readLines</span>(model_file)[<span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;data{&quot;                                                                       </span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt;  [2] &quot;  int &lt;lower = 1&gt; N;  // number of rows in the data&quot;                         </span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt;  [3] &quot;  int &lt;lower = 1&gt; native_total; // assumed size of native pool&quot;              </span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt;  [4] &quot;  array[N] int &lt;lower = 0&gt; dI; // observed number of yearly records invasive&quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;  array[N] int &lt;lower = 0&gt; dN; // observed number of yearly records native&quot;  </span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt;  [6] &quot;  vector &lt;lower = 0&gt;[N] t; // time from start&quot;                               </span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt;  [7] &quot;  real b0_mu; // prior for betas&quot;                                            </span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt;  [8] &quot;  real b1_mu; // prior for betas&quot;                                            </span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;  real b0_sd; // prior for betas&quot;                                            </span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt; [10] &quot;  real b1_sd; // prior for betas&quot;                                            </span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; [11] &quot;}&quot;</span></span></code></pre></div>
+<p>We can set it up using data from medfish. The only thing we need to
+assume is the native pool size (See Belmaker et al 2009 for more
+detail)</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>data_for_stan <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="at">N =</span> <span class="fu">nrow</span>(medfish),</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">native_total =</span> <span class="dv">600</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">dI =</span> medfish<span class="sc">$</span>aliens,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">dN =</span> medfish<span class="sc">$</span>natives,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">t =</span> medfish<span class="sc">$</span>t</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>)</span></code></pre></div>
+<p>An important aspect of Bayesian modelling is the ability to use prior
+for the model parameters. The model uses priors for both the mean and
+standard error of the parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">readLines</span>(model_file)[<span class="dv">7</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; [1] &quot;  real b0_mu; // prior for betas&quot; &quot;  real b1_mu; // prior for betas&quot;</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; [3] &quot;  real b0_sd; // prior for betas&quot; &quot;  real b1_sd; // prior for betas&quot;</span></span></code></pre></div>
+<p>We can start with a naive model of alien introduction to get an idea
+of how rapid is the alien introduction rate:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>naive_model <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">glm</span>(aliens <span class="sc">~</span> time, <span class="at">data =</span> medfish, <span class="at">family =</span> <span class="st">&quot;poisson&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">summary.glm</span>(naive_model)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; stats::glm(formula = aliens ~ time, family = &quot;poisson&quot;, data = medfish)</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt;              Estimate Std. Error z value Pr(&gt;|z|)    </span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; (Intercept) -0.319591   0.280405  -1.140 0.254391    </span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt; time         0.014949   0.004338   3.446 0.000568 ***</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; (Dispersion parameter for poisson family taken to be 1)</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt;     Null deviance: 123.07  on 59  degrees of freedom</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt; Residual deviance: 110.33  on 58  degrees of freedom</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt; AIC: 220.23</span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co">#&gt; Number of Fisher Scoring iterations: 6</span></span></code></pre></div>
+<p>We will use these estimates as priors for our model.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>coef_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(naive_model)<span class="sc">$</span>coefficients</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>priors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="at">b0_mu =</span> coef_table[<span class="dv">1</span>,<span class="dv">1</span>],</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="at">b0_sd =</span> coef_table[<span class="dv">1</span>,<span class="dv">2</span>],</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="at">b1_mu =</span> coef_table[<span class="dv">2</span>,<span class="dv">1</span>],</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="at">b1_sd =</span> coef_table[<span class="dv">2</span>,<span class="dv">2</span>]</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>)</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>priors</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt;        b0_mu        b0_sd        b1_mu        b1_sd </span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; -0.319590861  0.280404647  0.014949156  0.004337772</span></span></code></pre></div>
+<p>We join the priors with the rest of the data:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>data_for_stan <span class="ot">&lt;-</span> <span class="fu">c</span>(data_for_stan, priors)</span></code></pre></div>
+<p>We can then call the <code>sampling</code> function to fit the
+model:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>model_output <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">sampling</span>(native_discoveries_model, data_for_stan)</span></code></pre></div>
+<p>After the sampling, we can extract the model prediction for the
+number of undiscovered alien species in each year -
+<code>unrecorded_I</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>stan_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(model_output, <span class="at">pars =</span> <span class="st">&quot;unrecorded_I&quot;</span>)<span class="sc">$</span>summary <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">as_tibble</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">add_column</span>(<span class="at">year =</span> medfish<span class="sc">$</span>year)</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(medfish)<span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">x =</span> year) <span class="sc">+</span> </span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_point</span>(ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">cumsum</span>(natives)), <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">fill =</span> <span class="st">&quot;#377EB8&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_point</span>(ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">cumsum</span>(aliens)), <span class="at">shape =</span> <span class="dv">21</span>,  <span class="at">size =</span> <span class="dv">2</span>, <span class="at">fill =</span> <span class="st">&quot;#E41A1C&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_ribbon</span>(<span class="at">data =</span> stan_summary, ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">ymin =</span> <span class="st">`</span><span class="at">2.5%</span><span class="st">`</span>, <span class="at">ymax =</span> <span class="st">`</span><span class="at">97.5%</span><span class="st">`</span>), <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_line</span>(<span class="at">data =</span> stan_summary, ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">y =</span> mean)) <span class="sc">+</span> </span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Cumulative number</span><span class="sc">\n</span><span class="st">of discovered species&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<blockquote>
+<blockquote>
+<p>NOTE: This is just an example of the usage of such a model -
+additional tests should be performed to examine the validity of the
+results.</p>
+</blockquote>
+</blockquote>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
