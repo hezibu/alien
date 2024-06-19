@@ -2,16 +2,16 @@
 title: "Basic Usage"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Basic Usage}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+ %\VignetteIndexEntry{Basic Usage}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
+  knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
-)
+  )
 ```
 
 ```{r setup}
@@ -88,7 +88,7 @@ model$records
 
 #### Convergence
 
-Did the optimation algorithm converge? This prints out the convergence code from `optim`:
+Did the optimization algorithm converge? This prints out the convergence code from `optim`:
 
 ```{r}
 model$convergence
@@ -175,7 +175,7 @@ constant_introduction$`log-likelihood`
 
 ## Sampling-Proxy Model
 
-Now we'll look at a more elaborated model, which uses external data to control for changes in sampling intensity (Buba et al, 2004). We'll demonstrate that using data used in Belmaker et al (2009) which describe discoveries of native and alien species in the Mediterranean Sea between the years 1927–2017 (Golani, 2021). We will the `medfish` data included in the alien package:
+Now we'll look at a more elaborated model, which uses external data to control for changes in sampling intensity (Buba et al, 2024). We'll demonstrate that using data used in Belmaker et al (2009) which describe discoveries of native and alien species in the Mediterranean Sea between the years 1927–2017 (Golani, 2021). We will the `medfish` data included in the alien package:
 
 ```{r medfish_data}
 data("medfish")
@@ -197,7 +197,8 @@ ggplot2::ggplot(medfish)+
 
 ## Model fitting
 
-Here, we will demonstrate how the trend in native species discovery can be used as a proxy for the sampling throughot the time series time span. We will begin by adding a column to the data where we scale the native species discoveries:
+Here, for demonstration sake only, we will use the trend in native species discovery as a proxy for the sampling throughout the time series time span. Note that using native discoveries as a proxy for sampling has several limitations as described in Buba et al (2024).
+We will begin by adding a column to the data where we scale the native species discoveries:
 
 ```{r}
 medfish_for_model <- dplyr::mutate(medfish, natives_scaled = scale(natives))
