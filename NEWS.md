@@ -1,4 +1,4 @@
-# alien (development version)
+# alien 1.0.2
 
 # alien 1.0.2
 
