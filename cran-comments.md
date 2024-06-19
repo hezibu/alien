@@ -1,17 +1,21 @@
-## Resubmission
-This is a resubmission. In this version I have:
+## Minor release
 
-* Added .github directory to .Rbuildignore to fix the note:
-  Found the following hidden files and directories:
-   .github
-  These were most likely included in error. See section 'Package
-  structure' in the 'Writing R Extensions' manual.
+This is a minor version release to the already published package.
 
-  CRAN-pack does not know about
-   .github
+* Added functions.
+* Added new functionality to existing functions.
+* Expanded documentation.
+* Fixed a bug.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 note
+0 errors | 0 warnings | 1 note
 
-* This is a new release.
+The note is referring to URLs with status 403.
+
+## revdepcheck results
+
+We checked 0 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+
+ * We saw 0 new problems
+ * We failed to check 0 packages
