@@ -1,5 +1,12 @@
 # alien (development version)
 
+# alien 1.0.2
+
+* Added more extensive documentation, including citations for the newly published Buba et al 2024.
+* Added multiple ways to pass the `y` argument - either variable name, column name, or call to column within the provided data.
+* Fixed bug where `~ 1` would throw an error without data.
+* Added likelihood space mapping function
+
 # alien 1.0.1
 
 * CRAN release
