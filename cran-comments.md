@@ -1,8 +1,8 @@
-## Minor release
+## Patch release
 
-This is a minor version release to the already published package.
+This is a patched version of the already published package.
 
-* Added functions.
+* Added functions for visualization.
 * Added new functionality to existing functions.
 * Expanded documentation.
 * Fixed a bug.
