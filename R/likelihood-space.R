@@ -10,6 +10,8 @@ seq_from_center <- function(center, range, steps_from_center){
   return(sort(unique(c(first_part,second_part))))
 }
 
+
+# Function to create a dataframe containing the parameter values
 get_parameter_space <- function(parameter_list, growth, centers, ranges, steps_from_centers) {
   parameter_space <- mapply(seq_from_center, centers, ranges, steps_from_centers,
                             SIMPLIFY = F) |>
@@ -25,7 +27,7 @@ get_parameter_space <- function(parameter_list, growth, centers, ranges, steps_f
   parameter_space
 }
 
-
+# function to check if number of values provided matches number of parameters
 check_repair_values <- function(vector_value, value_name, n_parameters){
   if (!length(vector_value) %in% c(1, n_parameters)){
     cli::cli_abort("Supplied {length(vector_value)} {value_name} value{?s} to {n_parameters} predictor{?s}, please supply either {n_parameters} values or 1 value.")
@@ -37,16 +39,50 @@ check_repair_values <- function(vector_value, value_name, n_parameters){
   return(vector_value)
 }
 
-split_mu_pi <- function(vector_values, names_mu){
-  vector_mu <- vector_values[1:length(names_mu)]
-  vector_pi <-  vector_values[(length(names_mu) + 1):length(vector_values)]
 
-  return(list(mu = vector_mu,
-              pi = vector_pi))
-}
-
-
-likelihood_space <- function(y, mu = NULL, pi = NULL, data = NULL, growth = TRUE, type = "exponential", centers, ranges, steps_from_centers, ...){
+#' Calculate log-likelihood space for a given time series and data
+#'
+#' @description
+#' This function allows to calculate the log-likelihood values for a given set of parameter values.
+#' It can be used for diagnostics of the likelihood space and check - among others - for parameter contribution to log-likelihood.
+#' passing `FALSE` for the `calculate` argument allows to experiment with different parameter values sets before calculating their log-likelihoods.
+#' Please note: This functions may take a lot of time, depending on the number of parameters, and steps!
+#'
+#' @param y either a vector describing the number of discovered alien and invasive species (IAS) over a given time period, or the name (quoted or unquoted) of the corresponding column in the provided data.
+#' @param mu a formula defining the predictors for \eqn{\mu_t}, the annual introduction rate. Formulas should be provided in the syntax `~ x1 + x2 + ... + xn`. Use `~ 1` for an intercept only model.
+#' @param pi a formula defining the predictors for \eqn{\Pi_{st}}, the annual probability of detection. Formulas should be provided in the syntax `~ x1 + x2 + ... + xn`. Use `~ 1` for an intercept only model.
+#' @param data a data frame containing the variables in the model(s).
+#' @param growth logical. Should the population growth parameter \eqn{\gamma_2} be included in the model for \eqn{\Pi_{st}}?. Note that values for `init`, if provided, need to include an initial value for the growth parameter, when `growth = TRUE`.
+#' @param type Define whether the mu function should be on "linear" or "exponential" scale. Defaults to "exponential".
+#' @param centers the values used as the center-points for the parameter values. Usually the maximum likelihood estimation from a call to `snc`. Length should be either 1 or correspond to number of parameters (including the growth parameter).
+#' @param ranges the range of the parameter values in term of the center. The values will be withing `center - (center * range)` and `center + (center * range)`. Length should be either 1 or correspond to number of parameters (including the growth parameter).
+#' @param steps_from_centers How many values in the range between `center` and `center + (center * range)` should be included in the set. Length should be either 1 or correspond to number of parameters (including the growth parameter).
+#' @param calculate Whether to calculate the log-likelihoods (TRUE) or just view the parameter values (FALSE).
+#'
+#' @return A data frame containing the parameter values, and if `calculate = TRUE` including the log-likelihood values for each parameter combination.
+#' @export
+#'
+#' @examples
+#' \donttest{
+#' if (FALSE){ # this takes a while...
+#' example_model <- snc(sfestuary)
+#' estimates <- example_model$coefficients$Estimate
+#'
+#' likelihood_space <- likelihood_space(y = sfestuary, centers = estimates,
+#'                                      ranges = 1.5, steps_from_center = 10,
+#'                                      calculate = TRUE)
+#'
+#' # with specified formula:
+#' example_buba <- snc(y = aliens, pi = ~ natives, data = medfish)
+#' estimates <- example_buba$coefficients$Estimate
+#'
+#' likelihood_space <- likelihood_space(y = aliens, pi = ~ natives,
+#'                                      data = medfish, centers = estimates,
+#'                                      ranges = 1.5, steps_from_center = 10,
+#'                                      calculate = TRUE)
+#'  }
+#' }
+likelihood_space <- function(y, mu = NULL, pi = NULL, data = NULL, growth = TRUE, type = "exponential", centers, ranges, steps_from_centers, calculate = TRUE){
   if (missing(data)){
     # if data is not supplied, meaning only y (first records) is supplied
     time <- seq_along(y)
@@ -116,10 +152,6 @@ likelihood_space <- function(y, mu = NULL, pi = NULL, data = NULL, growth = TRUE
   if ("(Intercept)" %in% names_pi) names_pi[[1]] <- "gamma0"                # rename intercept to gamma0
   if ("time" %in% names_pi) names_pi[which(names_pi == "time")] <- "gamma1" # define gamma1 as change with time
 
-  # centers_split <- split_mu_pi(centers, names_mu)
-  # ranges_split <- split_mu_pi(ranges, names_mu)
-  # steps_split <- split_mu_pi(steps_from_centers, names_mu)
-
   parameter_values <- get_parameter_space(parameter_list = c(names_mu, names_pi),
                                           growth = growth,
                                           centers = centers,
@@ -127,48 +159,92 @@ likelihood_space <- function(y, mu = NULL, pi = NULL, data = NULL, growth = TRUE
                                           steps_from_centers = steps_from_centers)
 
 
-  log_likelihoods <- apply(parameter_values, MARGIN = 1, function(x)
-    alien:::snc_ll_function(y,
-                            mu_formula = mu,
-                            pi_formula = pi,
-                            data = data,
-                            growth = growth,
-                            type = type,
-                            x = x))
+  if (!calculate){
+    return (parameter_values)
+  } else {
+    log_likelihoods <- apply(parameter_values, MARGIN = 1, function(x)
+      snc_ll_function(y,
+                      mu_formula = mu,
+                      pi_formula = pi,
+                      data = data,
+                      growth = growth,
+                      type = type,
+                      x = x))
 
-  likelihood_space <- cbind(parameter_values, log_likelihoods)
+    likelihood_space <- cbind(parameter_values, log_likelihoods)
 
-  return(likelihood_space)
+    return(likelihood_space)
+  }
 }
 
-likelihood_map <- function(likelihood_space, x, y, range) {
+#' Plot log-likelihood space
+#'
+#' @description
+#' Plot a filled-contour heatmap displaying the log-likelihood space calculated using `likelihood_space`.
+#'
+#'
+#' @param likelihood_space a data frame resulting from a call to `likelihood_space`, where columns represent parameter values and an extra column `log_likelihoods` with the corresponding log-likelihood for each parameter value combination.
+#' @param x a string specifying the parameter to be plotted on the x-axis.
+#' @param y a string specifying the parameter to be plotted on the y-axis.
+#' @param delta the range of log-likelihood values of which different color codes will be plotted. Defaults to 10.
+#'
+#' @return
+#' #' A `ggplot` plot with the corresponding type of plot.
+#'
+#' @importFrom rlang .data
+#'
+#' @export
+#'
+#' @examples
+#' \donttest{
+#' if (FALSE){ # takes a while to finish
+#' example_model <- snc(sfestuary)
+#' estimates <- example_model$coefficients$Estimate
+#'
+#' likelihood_space <- likelihood_space(y = sfestuary, centers = estimates,
+#'                                      ranges = 1.5, steps_from_center = 10,
+#'                                      calculate = TRUE)
+#'
+#' likelihood_map(likelihood_space, "beta0", "beta1", 10)
+#'  }
+#' }
+likelihood_map <- function(likelihood_space, x, y, delta = 10) {
 
-  min_ll <- likelihood_space |> dplyr::filter(log_likelihoods == min(log_likelihoods))
+  if (!x %in% colnames(likelihood_space)){
+    cli::cli_abort("Parameter {x} does not exist in this log-likelihood space table")
+  }
+  if (!y %in% colnames(likelihood_space)){
+    cli::cli_abort("Parameter {y} does not exist in this log-likelihood space table")
+  }
 
-  colnames <- base::setdiff(colnames(likelihood_space), c(x,y, "log_likelihoods"))
+  min_ll <- likelihood_space |> dplyr::filter(.data$log_likelihoods == min(.data$log_likelihoods))
+
+  colnames <- setdiff(colnames(likelihood_space), c(x,y, "log_likelihoods"))
 
   min_ll_value <- min_ll$log_likelihoods
 
-  breaks <-  c(seq(min_ll_value-1, min_ll_value + range, length.out = range), Inf)
+  breaks <-  c(seq(min_ll_value-1, min_ll_value + delta, length.out = delta), Inf)
 
-  semi_join(likelihood_space, min_ll, by = colnames) |>
-    ggplot()+
-    aes(x = .data[[x]], y = .data[[y]], z = log_likelihoods)+
-    geom_contour_filled(breaks = breaks) +
-    geom_point(data = min_ll, size = 5, shape = 10, color = "red", show.legend = FALSE)+
-    theme_minimal() +
-    scale_x_discrete(expand = c(0,0))+
-    scale_y_discrete(expand = c(0,0))+
-    scale_fill_viridis_d(direction = -1,
-                         # trans = "log10",
-                         guide = guide_colorsteps(
-                           even.steps = T,
-                           frame.colour = "black",
-                           ticks.colour = NA,
-                           barwidth=0.5,
-                           barheight = 15)) +
-    labs(fill = "Log-Likelihood")+
-    theme(aspect.ratio = 1, legend.position = "left", legend.text = element_text(size = 16))
+  gg <- dplyr::semi_join(likelihood_space, min_ll, by = colnames) |>
+    ggplot2::ggplot()+
+    ggplot2::aes(x = .data[[x]], y = .data[[y]], z = .data$log_likelihoods)+
+    ggplot2::geom_contour_filled(breaks = breaks) +
+    ggplot2::geom_point(data = min_ll, size = 5, shape = 10, color = "red", show.legend = FALSE)+
+    ggplot2::theme_minimal() +
+    ggplot2::scale_x_discrete(expand = c(0,0))+
+    ggplot2::scale_y_discrete(expand = c(0,0))+
+    ggplot2::scale_fill_viridis_d(direction = -1,
+                                  # trans = "log10",
+                                  guide = ggplot2::guide_colorsteps(
+                                    even.steps = T,
+                                    frame.colour = "black",
+                                    ticks.colour = NA,
+                                    barwidth=0.5,
+                                    barheight = 15)) +
+    ggplot2::labs(fill = "Log-Likelihood")+
+    ggplot2::theme(aspect.ratio = 1, legend.position = "left", legend.text = ggplot2::element_text(size = 16))
+
+  return(gg)
 
 }
 
